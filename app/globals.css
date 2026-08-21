@@ -17,7 +17,7 @@ html.light {
   --card-bg: #FFFFFF;
   --card-border: #E2E8F0;
   --card-sub-bg: #F8FAFC;
-  --subtext: #64748B;
+  --subtext: #475569;
 }
 
 body {
@@ -30,22 +30,44 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Light Theme Card Utilities */
+/* ==============================================================================
+ * STYLING KHUSUS MODE SIANG (LIGHT MODE BEAUTIFICATION)
+ * ============================================================================== */
+html.light body {
+  background: linear-gradient(180deg, #F8FAFC 0%, #EEF2FF 50%, #F1F5F9 100%);
+  color: #0F172A;
+}
+
+/* Kartu Utamasiang: Putih Bersih dengan Shadow Lembut */
 html.light .bg-card {
   background-color: #FFFFFF !important;
   border-color: #E2E8F0 !important;
   color: #0F172A !important;
+  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03) !important;
 }
 
+/* Kontainer Dalam / Well Box */
 html.light .bg-slate-900\/80,
 html.light .bg-slate-900\/60,
 html.light .bg-slate-900\/90,
+html.light .bg-slate-900,
 html.light .bg-slate-950\/40,
 html.light .bg-slate-950\/50 {
   background-color: #F8FAFC !important;
-  border-color: #CBD5E1 !important;
+  border-color: #E2E8F0 !important;
 }
 
+/* Tombol Preset Botol & Aksot dalam Mode Siang */
+html.light button.bg-slate-900\/80 {
+  background-color: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+html.light button.bg-slate-900\/80:hover {
+  background-color: #EEF2FF !important;
+  border-color: #818CF8 !important;
+}
+
+/* Teks Header & Subteks */
 html.light .text-white {
   color: #0F172A !important;
 }
@@ -55,8 +77,55 @@ html.light .text-slate-300 {
   color: #475569 !important;
 }
 
-html.light .border-slate-800 {
+html.light .text-slate-500 {
+  color: #64748B !important;
+}
+
+/* Input Fields dalam Mode Siang */
+html.light input,
+html.light select,
+html.light textarea {
+  background-color: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+/* Garis Batas / Border */
+html.light .border-slate-800,
+html.light .border-slate-700 {
   border-color: #E2E8F0 !important;
+}
+
+/* Badges & Accents dalam Mode Siang */
+html.light .bg-slate-800 {
+  background-color: #E2E8F0 !important;
+  color: #1E293B !important;
+}
+
+/* Alert Boxes dalam Mode Siang */
+html.light .bg-indigo-950\/40,
+html.light .bg-indigo-950\/30 {
+  background-color: #EEF2FF !important;
+  border-color: #C7D2FE !important;
+}
+
+html.light .bg-rose-500\/10 {
+  background-color: #FFF1F2 !important;
+  border-color: #FECDD3 !important;
+}
+html.light .text-rose-300,
+html.light .text-rose-200\/80 {
+  color: #BE123C !important;
+}
+
+html.light .bg-amber-500\/10 {
+  background-color: #FFFBEB !important;
+  border-color: #FDE68A !important;
+}
+
+html.light .bg-emerald-500\/10 {
+  background-color: #ECFDF5 !important;
+  border-color: #A7F3D0 !important;
 }
 
 /* Custom Scrollbar */
@@ -67,7 +136,7 @@ html.light .border-slate-800 {
   background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #CBD5E1;
   border-radius: 9999px;
 }
 
