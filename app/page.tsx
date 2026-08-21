@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Milk, Wifi, History, Heart, Moon } from 'lucide-react';
+import { Milk, Wifi, History, Heart } from 'lucide-react';
 import { useRealtimeFeedings } from '@/hooks/useRealtimeFeedings';
 import { useFormulaInventory } from '@/hooks/useFormulaInventory';
 import { useBabyProfile } from '@/hooks/useBabyProfile';
@@ -65,7 +65,7 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* 2. LAYAR KONTEN BERSIH SESUAI TAB YANG DIPILIH */}
+      {/* 2. LAYAR KONTEN KHUSUS PER-TAB (SUPER BERSIH & FOKUS) */}
       
       {/* TAB 1: SUSU (PEMBERIAN SUSU, ACTIVE TIMER, & RIWAYAT MINUM) */}
       {activeTab === 'susu' && (
@@ -162,12 +162,24 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* TAB 5: PROFIL BAYI & TUMMY TIME */}
+      {/* TAB 5: TUMMY TIME KHUSUS */}
       {activeTab === 'tummy' && (
         <div className="space-y-4 animate-fade-in">
-          <BabyProfileWidget onAgeChange={setBabyAgeMonths} />
           <TummyTimeWidget />
+        </div>
+      )}
+
+      {/* TAB 6: REKAP HARIAN & WHATSAPP SHARE */}
+      {activeTab === 'rekap' && (
+        <div className="space-y-4 animate-fade-in">
           <DailySummaryShareWidget />
+        </div>
+      )}
+
+      {/* TAB 7: PROFIL BAYI & PANDUAN MEDIS LENGKAP */}
+      {activeTab === 'profil' && (
+        <div className="space-y-4 animate-fade-in">
+          <BabyProfileWidget onAgeChange={setBabyAgeMonths} />
         </div>
       )}
 
@@ -178,7 +190,7 @@ export default function DashboardPage() {
         </p>
       </footer>
 
-      {/* 3. FLOATING BOTTOM MOBILE NAVIGATION BAR */}
+      {/* 3. HORIZONTALLY SCROLLABLE BOTTOM MOBILE NAVIGATION BAR */}
       <BottomMobileNav activeTab={activeTab} onTabChange={setActiveTab} />
 
       <PWAInstallPrompt />
