@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Milk, Wifi, History, Heart, Moon } from 'lucide-react';
+import { Milk, Wifi, History, Heart } from 'lucide-react';
 import { useRealtimeFeedings } from '@/hooks/useRealtimeFeedings';
 import { useFormulaInventory } from '@/hooks/useFormulaInventory';
 import { BabyProfileWidget } from '@/components/BabyProfileWidget';
@@ -12,6 +12,7 @@ import { SleepWakeWindowWidget } from '@/components/SleepWakeWindowWidget';
 import { TummyTimeWidget } from '@/components/TummyTimeWidget';
 import { DiaperTrackerWidget } from '@/components/DiaperTrackerWidget';
 import { DailySummaryShareWidget } from '@/components/DailySummaryShareWidget';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
 
 export default function DashboardPage() {
@@ -37,7 +38,7 @@ export default function DashboardPage() {
 
   return (
     <main className="max-w-md mx-auto min-h-screen px-4 py-6 pb-24 space-y-5">
-      {/* 1. APP HEADER & REALTIME STATUS */}
+      {/* 1. APP HEADER & THEME SWITCHER */}
       <header className="flex items-center justify-between bg-card border border-card-border p-4 rounded-2xl shadow-lg">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-xl text-white shadow-md shadow-indigo-900/40">
@@ -45,18 +46,17 @@ export default function DashboardPage() {
           </div>
           <div>
             <h1 className="text-base font-extrabold text-white tracking-tight flex items-center gap-1.5">
-              Baby Tracker <Moon className="w-3.5 h-3.5 text-amber-300" />
+              Baby Tracker
             </h1>
-            <p className="text-[11px] text-slate-400">Night-Friendly PWA App</p>
+            <p className="text-[11px] text-slate-400 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping inline-block" />
+              <Wifi className="w-3 h-3 text-emerald-400" /> Realtime Connected
+            </p>
           </div>
         </div>
 
-        <div className="flex flex-col items-end">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-            <Wifi className="w-3 h-3" /> Realtime
-          </span>
-          <span className="text-[9px] text-slate-500 mt-1">HP Ayah & Ibu Connected</span>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
         </div>
       </header>
 

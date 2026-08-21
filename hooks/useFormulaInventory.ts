@@ -12,11 +12,11 @@ export function useFormulaInventory() {
   const fetchInventory = useCallback(async () => {
     try {
       setLoading(true);
-      // Gunakan .maybeSingle() agar tidak melemparkan HTTP 406 jika data belum ada
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('v_formula_stock_prediction')
         .select('*')
         .eq('family_id', FAMILY_ID)
+        .limit(1)
         .maybeSingle();
 
       if (data) {
@@ -26,6 +26,7 @@ export function useFormulaInventory() {
           .from('formula_inventories')
           .select('*')
           .eq('family_id', FAMILY_ID)
+          .limit(1)
           .maybeSingle();
 
         if (invData) {
@@ -115,7 +116,7 @@ export function useFormulaInventory() {
     };
   }, [fetchInventory]);
 
-  // Update pengaturan kaleng susu murni ke Supabase DB
+  // Update pengaturan kaleng susu murni ke Supabase DB (HANYA 1 BARIS PER FAMILY)
   const updateInventory = async (payload: Partial<FormulaInventory>) => {
     if (!stockData) return;
 
@@ -130,25 +131,39 @@ export function useFormulaInventory() {
     });
 
     try {
-      const { error } = await supabase
+      const { data: existing } = await supabase
         .from('formula_inventories')
-        .upsert(
-          [
-            {
-              family_id: FAMILY_ID,
-              brand_name: updated.brand_name,
-              can_weight_grams: updated.can_weight_grams,
-              current_weight_grams: updated.current_weight_grams,
-              grams_per_scoop: updated.grams_per_scoop,
-              ml_per_scoop: updated.ml_per_scoop,
-              updated_at: new Date().toISOString(),
-            },
-          ],
-          { onConflict: 'family_id' }
-        );
-      if (error) throw error;
+        .select('id')
+        .eq('family_id', FAMILY_ID)
+        .limit(1)
+        .maybeSingle();
+
+      if (existing) {
+        await supabase
+          .from('formula_inventories')
+          .update({
+            brand_name: updated.brand_name,
+            can_weight_grams: updated.can_weight_grams,
+            current_weight_grams: updated.current_weight_grams,
+            grams_per_scoop: updated.grams_per_scoop,
+            ml_per_scoop: updated.ml_per_scoop,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', existing.id);
+      } else {
+        await supabase.from('formula_inventories').insert([
+          {
+            family_id: FAMILY_ID,
+            brand_name: updated.brand_name,
+            can_weight_grams: updated.can_weight_grams,
+            current_weight_grams: updated.current_weight_grams,
+            grams_per_scoop: updated.grams_per_scoop,
+            ml_per_scoop: updated.ml_per_scoop,
+          },
+        ]);
+      }
     } catch (err) {
-      console.warn('Upsert inventory error:', err);
+      console.warn('Update inventory error:', err);
     }
   };
 

@@ -2,9 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root, html.dark {
   --background: #0B0F19;
   --foreground: #F8FAFC;
+  --card-bg: #111827;
+  --card-border: #1F2937;
+  --card-sub-bg: #0F172A;
+  --subtext: #94A3B8;
+}
+
+html.light {
+  --background: #F1F5F9;
+  --foreground: #0F172A;
+  --card-bg: #FFFFFF;
+  --card-border: #E2E8F0;
+  --card-sub-bg: #F8FAFC;
+  --subtext: #64748B;
 }
 
 body {
@@ -14,6 +27,36 @@ body {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light Theme Card Utilities */
+html.light .bg-card {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+html.light .bg-slate-900\/80,
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/90,
+html.light .bg-slate-950\/40,
+html.light .bg-slate-950\/50 {
+  background-color: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+
+html.light .text-white {
+  color: #0F172A !important;
+}
+
+html.light .text-slate-400,
+html.light .text-slate-300 {
+  color: #475569 !important;
+}
+
+html.light .border-slate-800 {
+  border-color: #E2E8F0 !important;
 }
 
 /* Custom Scrollbar */
@@ -21,10 +64,10 @@ body {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B0F19;
+  background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
+  background: #334155;
   border-radius: 9999px;
 }
 
