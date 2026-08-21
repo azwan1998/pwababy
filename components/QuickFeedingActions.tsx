@@ -122,7 +122,6 @@ export function QuickFeedingActions({
             <p className="text-xs text-slate-300 font-bold flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Pilih Takaran Botol:
             </p>
-            <span className="text-[10px] text-slate-400 font-semibold">Potong Stok Otomatis</span>
           </div>
 
           <div className="grid grid-cols-3 gap-2.5 mb-3">
@@ -132,7 +131,7 @@ export function QuickFeedingActions({
                 <button
                   key={item.ml}
                   onClick={() => onCreateFeeding(item.ml)}
-                  className={`relative flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-200 active:scale-95 border min-h-[76px] ${
+                  className={`relative flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-200 active:scale-95 border min-h-[72px] ${
                     isRecommended
                       ? 'bg-gradient-to-b from-indigo-900/80 via-slate-900 to-slate-950 border-indigo-500 shadow-lg shadow-indigo-950/40 ring-1 ring-indigo-400/50'
                       : 'bg-slate-900/80 hover:bg-slate-800/80 border-slate-800 hover:border-indigo-500/40'
@@ -145,7 +144,7 @@ export function QuickFeedingActions({
                   )}
                   <span className="text-xl font-black text-white tracking-tight">{item.label}</span>
                   <span className="text-[10px] font-semibold mt-1 px-2 py-0.5 rounded-md bg-slate-800/80 text-indigo-300 border border-slate-700/60">
-                    {item.scoops} Sendok (~{(item.scoops * 4.6).toFixed(1)}g)
+                    {item.scoops} Sendok
                   </span>
                 </button>
               );

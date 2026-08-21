@@ -212,13 +212,8 @@ export function ActiveBottleTimers({
               <Timer className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-sm font-extrabold text-white tracking-tight flex items-center gap-1.5">
+              <h3 className="text-sm font-extrabold text-white tracking-tight">
                 Jadwal Minum Berikutnya
-                {intervalHours === recommendedIntervalHours && (
-                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                    Auto Medis
-                  </span>
-                )}
               </h3>
               <p className="text-xs text-slate-400">
                 {hasFinishedLog ? `Jeda ${intervalHours} Jam dari Selesai Minum` : 'Menunggu log selesai minum'}
@@ -273,7 +268,7 @@ export function ActiveBottleTimers({
               <div>
                 <p className="text-[11px] font-semibold text-slate-400 flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-indigo-400" />
-                  {isNextFeedOverdue ? 'Waktu Terlewat:' : 'Hitung Mundur Sisa Waktu:'}
+                  {isNextFeedOverdue ? 'Waktu Terlewat:' : 'Sisa Waktu:'}
                 </p>
                 <div className="flex items-baseline gap-1 mt-1">
                   <span
@@ -314,7 +309,7 @@ export function ActiveBottleTimers({
 
             {/* PROGRESS BAR WAKTU MENUJU JADWAL */}
             <div className="space-y-1.5">
-              <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden p-0.5">
+              <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all duration-1000 ${
                     isNextFeedOverdue
@@ -327,9 +322,9 @@ export function ActiveBottleTimers({
                 />
               </div>
               <div className="flex justify-between items-center text-[10px] text-slate-500 font-semibold px-0.5">
-                <span>0j Selesai</span>
-                <span>{nextFeedProgressPercent.toFixed(0)}% Jarak Waktu</span>
-                <span>Jeda {intervalHours} Jam</span>
+                <span>0j</span>
+                <span>{nextFeedProgressPercent.toFixed(0)}%</span>
+                <span>{intervalHours} Jam</span>
               </div>
             </div>
 
@@ -339,7 +334,7 @@ export function ActiveBottleTimers({
                 <div className="flex items-center gap-2">
                   <Bell className="w-4 h-4 text-rose-400 flex-shrink-0 animate-bounce" />
                   <p className="text-xs font-bold text-rose-200">
-                    Waktunya Minum Susu! Si kecil mungkin sudah mulai lapar.
+                    Waktunya Minum Susu!
                   </p>
                 </div>
                 {onCreateFeeding && (
@@ -355,15 +350,10 @@ export function ActiveBottleTimers({
               <div className="mt-3 bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl flex items-center gap-2 text-xs text-amber-200">
                 <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0" />
                 <span>
-                  Tinggal {nextFeedMins} menit lagi! Segera sterilkan botol dan siapkan air hangat.
+                  Tinggal {nextFeedMins} menit lagi. Siapkan botol & air hangat.
                 </span>
               </div>
-            ) : (
-              <div className="mt-3 bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/80 flex items-center gap-2 text-[11px] text-slate-400">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                <span>Si kecil sedang mencerna dengan baik. Waktu santai / bermain.</span>
-              </div>
-            )}
+            ) : null}
           </div>
         ) : (
           <div className="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center space-y-2">
@@ -382,10 +372,10 @@ export function ActiveBottleTimers({
           <div className="flex items-center justify-between text-xs">
             <span className="text-slate-400 font-semibold flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              Pilih Jeda Waktu Antar Minum:
+              Pilih Jeda Waktu:
             </span>
             <span className="text-[10px] text-indigo-300 font-bold">
-              Panduan Dokter: {recommendedIntervalHours} Jam
+              Rekomendasi: {recommendedIntervalHours} Jam
             </span>
           </div>
 
