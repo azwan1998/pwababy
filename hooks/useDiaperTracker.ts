@@ -36,19 +36,22 @@ export function useDiaperTracker() {
   useEffect(() => {
     fetchTodayDiapers();
 
+    const channelName = `realtime:diaper_tracker:${FAMILY_ID}_${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(`public:baby_activities_diaper:${FAMILY_ID}`)
+      .channel(channelName)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'baby_activities', filter: `family_id=eq.${FAMILY_ID}` },
         () => fetchTodayDiapers()
-      )
-      .subscribe();
+      );
+
+    channel.subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
   }, [fetchTodayDiapers]);
+
 
   const logDiaperChange = async (type: DiaperType, notes?: string) => {
     const nowIso = new Date().toISOString();

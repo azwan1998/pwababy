@@ -12,21 +12,21 @@ export function useFormulaInventory() {
   const fetchInventory = useCallback(async () => {
     try {
       setLoading(true);
-      const { data } = await supabase
+      // Gunakan .maybeSingle() agar tidak melemparkan HTTP 406 jika data belum ada
+      const { data, error } = await supabase
         .from('v_formula_stock_prediction')
         .select('*')
         .eq('family_id', FAMILY_ID)
-        .single();
+        .maybeSingle();
 
       if (data) {
         setStockData(data as FormulaStockPrediction);
       } else {
-        // Direct query ke formula_inventories jika View belum terisi
         const { data: invData } = await supabase
           .from('formula_inventories')
           .select('*')
           .eq('family_id', FAMILY_ID)
-          .single();
+          .maybeSingle();
 
         if (invData) {
           const currentGrams = Number(invData.current_weight_grams);
@@ -67,7 +67,7 @@ export function useFormulaInventory() {
             .from('formula_inventories')
             .insert([initInv])
             .select()
-            .single();
+            .maybeSingle();
 
           if (inserted) {
             setStockData({
@@ -90,12 +90,13 @@ export function useFormulaInventory() {
     }
   }, []);
 
-  // Realtime subscription untuk update otomatis saat stok dipotong oleh trigger/feeding log
+  // Realtime subscription dengan channel ID unik untuk mencegah callback error
   useEffect(() => {
     fetchInventory();
 
-    const invChannel = supabase
-      .channel(`public:formula_inventories:${FAMILY_ID}`)
+    const channelName = `realtime:formula_inventories:${FAMILY_ID}_${Math.random().toString(36).substring(2, 7)}`;
+    const channel = supabase
+      .channel(channelName)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'formula_inventories', filter: `family_id=eq.${FAMILY_ID}` },
@@ -105,11 +106,12 @@ export function useFormulaInventory() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'feeding_logs', filter: `family_id=eq.${FAMILY_ID}` },
         () => fetchInventory()
-      )
-      .subscribe();
+      );
+
+    channel.subscribe();
 
     return () => {
-      supabase.removeChannel(invChannel);
+      supabase.removeChannel(channel);
     };
   }, [fetchInventory]);
 

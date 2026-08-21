@@ -13,76 +13,56 @@ export function useBabyProfile() {
   });
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Helper untuk menyimpan ke localStorage sebagai backup offline
-  const saveLocal = (data: BabyProfile) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('pwababy_name', data.baby_name);
-      localStorage.setItem('pwababy_dob', data.birth_date);
-      localStorage.setItem('pwababy_weight', data.weight_kg.toString());
-    }
-  };
-
   const fetchProfile = useCallback(async () => {
     try {
       setLoading(true);
+      // Gunakan .maybeSingle() agar tidak memicu HTTP 406 saat baris belum ada di DB
       const { data, error } = await supabase
         .from('baby_profiles')
         .select('*')
         .eq('family_id', FAMILY_ID)
-        .single();
+        .maybeSingle();
+
+      if (error) {
+        console.warn('Fetch baby profile warning:', error.message);
+      }
 
       if (data) {
-        const loaded: BabyProfile = {
+        setProfile({
           id: data.id,
           family_id: data.family_id,
           baby_name: data.baby_name || 'Si Kecil',
           birth_date: data.birth_date || '2026-06-01',
           weight_kg: Number(data.weight_kg) || 5.2,
-        };
-        setProfile(loaded);
-        saveLocal(loaded);
-      } else {
-        // Fallback dari localStorage jika tabel Supabase belum ada barisnya
-        if (typeof window !== 'undefined') {
-          const savedName = localStorage.getItem('pwababy_name');
-          const savedDob = localStorage.getItem('pwababy_dob');
-          const savedWeight = localStorage.getItem('pwababy_weight');
-          if (savedName || savedDob || savedWeight) {
-            setProfile({
-              family_id: FAMILY_ID,
-              baby_name: savedName || 'Si Kecil',
-              birth_date: savedDob || '2026-06-01',
-              weight_kg: savedWeight ? parseFloat(savedWeight) : 5.2,
-            });
-          }
-        }
+        });
       }
     } catch (err) {
-      console.warn('Fetch baby profile fallback:', err);
+      console.warn('Fetch baby profile exception:', err);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // Realtime subscription untuk update profil bayi antara HP Ayah & Ibu
+  // Realtime subscription dengan channel ID unik per mount untuk mencegah callback error
   useEffect(() => {
     fetchProfile();
 
+    const channelName = `realtime:baby_profiles:${FAMILY_ID}_${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(`public:baby_profiles:${FAMILY_ID}`)
+      .channel(channelName)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'baby_profiles', filter: `family_id=eq.${FAMILY_ID}` },
         () => fetchProfile()
-      )
-      .subscribe();
+      );
+
+    channel.subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
   }, [fetchProfile]);
 
-  // Action untuk update profil di DB Supabase & Realtime
   const updateProfile = async (newProfile: Partial<BabyProfile>) => {
     const updated: BabyProfile = {
       ...profile,
@@ -91,7 +71,6 @@ export function useBabyProfile() {
     };
 
     setProfile(updated);
-    saveLocal(updated);
 
     try {
       const { error } = await supabase
@@ -111,7 +90,7 @@ export function useBabyProfile() {
 
       if (error) throw error;
     } catch (err) {
-      console.warn('Upsert baby profile warning, saved locally:', err);
+      console.warn('Upsert baby profile error:', err);
     }
   };
 

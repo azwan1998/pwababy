@@ -35,19 +35,22 @@ export function useTummyTime() {
   useEffect(() => {
     fetchTodayTummyTime();
 
+    const channelName = `realtime:tummy_time:${FAMILY_ID}_${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(`public:baby_activities_tummy:${FAMILY_ID}`)
+      .channel(channelName)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'baby_activities', filter: `family_id=eq.${FAMILY_ID}` },
         () => fetchTodayTummyTime()
-      )
-      .subscribe();
+      );
+
+    channel.subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
   }, [fetchTodayTummyTime]);
+
 
   // Stopwatch ticker
   useEffect(() => {

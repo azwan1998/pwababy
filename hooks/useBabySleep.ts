@@ -46,19 +46,22 @@ export function useBabySleep() {
   useEffect(() => {
     fetchSleepLogs();
 
+    const channelName = `realtime:baby_sleep:${FAMILY_ID}_${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(`public:baby_activities_sleep:${FAMILY_ID}`)
+      .channel(channelName)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'baby_activities', filter: `family_id=eq.${FAMILY_ID}` },
         () => fetchSleepLogs()
-      )
-      .subscribe();
+      );
+
+    channel.subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
   }, [fetchSleepLogs]);
+
 
   // Start Sleep Session
   const startSleep = async () => {

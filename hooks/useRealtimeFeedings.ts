@@ -33,8 +33,9 @@ export function useRealtimeFeedings() {
   useEffect(() => {
     fetchFeedings();
 
+    const channelName = `realtime:feeding_logs:${FAMILY_ID}_${Math.random().toString(36).substring(2, 7)}`;
     const channel = supabase
-      .channel(`public:feeding_logs:${FAMILY_ID}`)
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -59,13 +60,15 @@ export function useRealtimeFeedings() {
             setFeedings((prev) => prev.filter((item) => item.id !== deletedId));
           }
         }
-      )
-      .subscribe();
+      );
+
+    channel.subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
   }, [fetchFeedings]);
+
 
   // 3. Actions: Create Feeding Log ke DB Supabase
   const createFeeding = async (amount_ml: number) => {
