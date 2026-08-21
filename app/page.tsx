@@ -13,6 +13,7 @@ import { TummyTimeWidget } from '@/components/TummyTimeWidget';
 import { DiaperTrackerWidget } from '@/components/DiaperTrackerWidget';
 import { DailySummaryShareWidget } from '@/components/DailySummaryShareWidget';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { BottomMobileNav } from '@/components/BottomMobileNav';
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
 
 export default function DashboardPage() {
@@ -37,7 +38,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <main className="max-w-md mx-auto min-h-screen px-4 py-6 pb-24 space-y-5">
+    <main className="max-w-md mx-auto min-h-screen px-4 py-6 pb-28 space-y-5">
       {/* 1. APP HEADER & THEME SWITCHER */}
       <header className="flex items-center justify-between bg-card border border-card-border p-4 rounded-2xl shadow-lg">
         <div className="flex items-center gap-3">
@@ -60,38 +61,48 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* 2. WIDGET PROFIL BAYI (HITUNG UMUR, BB KG, & REKOMENDASI SUSU MEDIS REALTIME) */}
-      <BabyProfileWidget onAgeChange={setBabyAgeMonths} />
+      {/* 2. WIDGET PROFIL BAYI */}
+      <div id="section-profile">
+        <BabyProfileWidget onAgeChange={setBabyAgeMonths} />
+      </div>
 
-      {/* 3. TOMBOL QUICK ACTION FEEDING (PRESET BEBELAC: 65, 100, 135, 165, 200, 235 ML) */}
-      <QuickFeedingActions
-        activeFeeding={activeFeeding}
-        babyAgeMonths={babyAgeMonths}
-        onCreateFeeding={handleCreateFeeding}
-        onStartDrinking={startDrinking}
-        onFinishFeeding={finishFeeding}
-        onDiscardFeeding={discardFeeding}
-      />
+      {/* 3. SECTION PEMBERIAN SUSU & SMART TIMERS */}
+      <div id="section-feeding" className="space-y-5 scroll-mt-20">
+        <QuickFeedingActions
+          activeFeeding={activeFeeding}
+          babyAgeMonths={babyAgeMonths}
+          onCreateFeeding={handleCreateFeeding}
+          onStartDrinking={startDrinking}
+          onFinishFeeding={finishFeeding}
+          onDiscardFeeding={discardFeeding}
+        />
+        <ActiveBottleTimers activeFeeding={activeFeeding} recentFinishedFeeding={recentFinishedFeeding} />
+      </div>
 
-      {/* 4. SMART TIMERS (COUNTDOWN BASI & POSISI TEGAK 20 MIN) */}
-      <ActiveBottleTimers activeFeeding={activeFeeding} recentFinishedFeeding={recentFinishedFeeding} />
+      {/* 4. SECTION TIDUR & WAKE WINDOW */}
+      <div id="section-sleep" className="scroll-mt-20">
+        <SleepWakeWindowWidget babyAgeMonths={babyAgeMonths} />
+      </div>
 
-      {/* 5. WIDGET DURASI TIDUR & WAKE WINDOW HARIAN */}
-      <SleepWakeWindowWidget babyAgeMonths={babyAgeMonths} />
+      {/* 5. SECTION PELACAK POPOK */}
+      <div id="section-diaper" className="scroll-mt-20">
+        <DiaperTrackerWidget />
+      </div>
 
-      {/* 6. PELACAK GANTI POPOK (PIPIS & PUP) */}
-      <DiaperTrackerWidget />
+      {/* 6. SECTION STOK KALENG SUSU */}
+      <div id="section-stock" className="scroll-mt-20">
+        <StockInventoryWidget stockData={stockData} onUpdateInventory={updateInventory} />
+      </div>
 
-      {/* 7. WIDGET STOK KALENG (PRESET 350g, 600g, 775g) & ESTIMASI WAKTU BELI */}
-      <StockInventoryWidget stockData={stockData} onUpdateInventory={updateInventory} />
+      {/* 7. SECTION TUMMY TIME */}
+      <div id="section-tummy" className="scroll-mt-20">
+        <TummyTimeWidget />
+      </div>
 
-      {/* 8. WIDGET TUMMY TIME HARIAN & RIWAYAT SESI */}
-      <TummyTimeWidget />
-
-      {/* 9. SHARE REKAP HARIAN KE WHATSAPP */}
+      {/* 8. SHARE REKAP HARIAN KE WHATSAPP */}
       <DailySummaryShareWidget />
 
-      {/* 10. RIWAYAT MINUM TERAKHIR */}
+      {/* 9. RIWAYAT MINUM TERAKHIR */}
       <section className="bg-card border border-card-border rounded-2xl p-5 shadow-xl space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
@@ -155,6 +166,9 @@ export default function DashboardPage() {
           Dibuat dengan <Heart className="w-3 h-3 text-rose-500 fill-current" /> untuk Ayah & Ibu
         </p>
       </footer>
+
+      {/* 10. BOTTOM MOBILE NAVIGATION BAR (FLOATING NATIVE LOOK) */}
+      <BottomMobileNav />
 
       <PWAInstallPrompt />
     </main>
