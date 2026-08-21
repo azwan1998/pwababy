@@ -1,11 +1,12 @@
 'use client';
 
-import React from 'react';
-import { Baby, Play, Square, Award, CheckCircle2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Baby, Play, Square, Award, CheckCircle2, History, ChevronDown, ChevronUp } from 'lucide-react';
 import { useTummyTime } from '@/hooks/useTummyTime';
 
 export function TummyTimeWidget() {
   const {
+    activities,
     completedSessionsToday,
     targetSessions,
     totalMinutesToday,
@@ -14,6 +15,8 @@ export function TummyTimeWidget() {
     startLiveSession,
     stopAndSaveSession,
   } = useTummyTime();
+
+  const [showHistory, setShowHistory] = useState<boolean>(false);
 
   const mins = Math.floor(timerSeconds / 60);
   const secs = timerSeconds % 60;
@@ -71,13 +74,52 @@ export function TummyTimeWidget() {
         )}
       </div>
 
-      {/* STATISTIK HARI INI */}
-      <div className="flex items-center justify-between text-xs text-slate-300 bg-slate-950/40 p-3 rounded-xl border border-slate-800">
-        <div className="flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-          <span>Total Durasi Hari Ini:</span>
+      {/* STATISTIK & TOGGLE RIWAYAT TUMMY TIME */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs text-slate-300 bg-slate-950/40 p-3 rounded-xl border border-slate-800">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <span>Total Durasi Hari Ini:</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="font-extrabold text-white">{totalMinutesToday} Menit</span>
+            {activities.length > 0 && (
+              <button
+                onClick={() => setShowHistory(!showHistory)}
+                className="flex items-center gap-1 text-[11px] text-cyan-400 hover:text-cyan-300 font-semibold"
+              >
+                <History className="w-3.5 h-3.5" /> Riwayat {showHistory ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              </button>
+            )}
+          </div>
         </div>
-        <span className="font-extrabold text-white">{totalMinutesToday} Menit</span>
+
+        {/* DAFTAR RIWAYAT SESI TUMMY TIME HARI INI */}
+        {showHistory && activities.length > 0 && (
+          <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-2 max-h-48 overflow-y-auto">
+            <p className="text-[11px] font-bold text-cyan-400 mb-2">Riwayat Sesi Tummy Time Hari Ini:</p>
+            {activities.map((act, index) => {
+              const timeStr = new Date(act.started_at).toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+              });
+
+              return (
+                <div
+                  key={act.id || index}
+                  className="flex items-center justify-between p-2 rounded-lg bg-slate-950/60 border border-slate-800 text-xs"
+                >
+                  <span className="text-slate-400 font-medium">
+                    Sesi #{activities.length - index} ({timeStr})
+                  </span>
+                  <span className="font-extrabold text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">
+                    {act.duration_minutes} Menit
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -134,12 +134,23 @@ LEFT JOIN last_7_days l7 ON inv.family_id = l7.family_id;
 
 
 -- ==============================================================================
--- 7. ENABLE REALTIME PUBLICATION FOR ALL TABLES
+-- 7. ENABLE REALTIME PUBLICATION SAFE CHECK (TIDAK ERROR JIKA SUDAH ADA)
 -- ==============================================================================
-ALTER PUBLICATION supabase_realtime ADD TABLE public.formula_inventories;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.feeding_logs;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.baby_activities;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.baby_profiles;
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'formula_inventories') THEN
+        ALTER PUBLICATION supabase_realtime ADD TABLE public.formula_inventories;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'feeding_logs') THEN
+        ALTER PUBLICATION supabase_realtime ADD TABLE public.feeding_logs;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'baby_activities') THEN
+        ALTER PUBLICATION supabase_realtime ADD TABLE public.baby_activities;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'baby_profiles') THEN
+        ALTER PUBLICATION supabase_realtime ADD TABLE public.baby_profiles;
+    END IF;
+END $$;
 
 
 -- ==============================================================================
@@ -149,6 +160,11 @@ ALTER TABLE public.formula_inventories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.feeding_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.baby_activities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.baby_profiles ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow all access to formula_inventories" ON public.formula_inventories;
+DROP POLICY IF EXISTS "Allow all access to feeding_logs" ON public.feeding_logs;
+DROP POLICY IF EXISTS "Allow all access to baby_activities" ON public.baby_activities;
+DROP POLICY IF EXISTS "Allow all access to baby_profiles" ON public.baby_profiles;
 
 CREATE POLICY "Allow all access to formula_inventories" ON public.formula_inventories FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all access to feeding_logs" ON public.feeding_logs FOR ALL USING (true) WITH CHECK (true);

@@ -10,6 +10,8 @@ import { ActiveBottleTimers } from '@/components/ActiveBottleTimers';
 import { StockInventoryWidget } from '@/components/StockInventoryWidget';
 import { SleepWakeWindowWidget } from '@/components/SleepWakeWindowWidget';
 import { TummyTimeWidget } from '@/components/TummyTimeWidget';
+import { DiaperTrackerWidget } from '@/components/DiaperTrackerWidget';
+import { DailySummaryShareWidget } from '@/components/DailySummaryShareWidget';
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
 
 export default function DashboardPage() {
@@ -57,7 +59,7 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* 2. WIDGET PROFIL BAYI (HITUNG UMUR, BB KG, & REKOMENDASI SUSU MEDIS) */}
+      {/* 2. WIDGET PROFIL BAYI (HITUNG UMUR, BB KG, & REKOMENDASI SUSU MEDIS REALTIME) */}
       <BabyProfileWidget onAgeChange={setBabyAgeMonths} />
 
       {/* 3. TOMBOL QUICK ACTION FEEDING (PRESET BEBELAC: 65, 100, 135, 165, 200, 235 ML) */}
@@ -76,13 +78,19 @@ export default function DashboardPage() {
       {/* 5. WIDGET DURASI TIDUR & WAKE WINDOW HARIAN */}
       <SleepWakeWindowWidget babyAgeMonths={babyAgeMonths} />
 
-      {/* 6. WIDGET STOK KALENG (PRESET 350g, 600g, 775g) & ESTIMASI WAKTU BELI */}
+      {/* 6. PELACAK GANTI POPOK (PIPIS & PUP) */}
+      <DiaperTrackerWidget />
+
+      {/* 7. WIDGET STOK KALENG (PRESET 350g, 600g, 775g) & ESTIMASI WAKTU BELI */}
       <StockInventoryWidget stockData={stockData} onUpdateInventory={updateInventory} />
 
-      {/* 7. WIDGET TUMMY TIME HARIAN */}
+      {/* 8. WIDGET TUMMY TIME HARIAN & RIWAYAT SESI */}
       <TummyTimeWidget />
 
-      {/* 8. RIWAYAT MINUM TERAKHIR */}
+      {/* 9. SHARE REKAP HARIAN KE WHATSAPP */}
+      <DailySummaryShareWidget />
+
+      {/* 10. RIWAYAT MINUM TERAKHIR */}
       <section className="bg-card border border-card-border rounded-2xl p-5 shadow-xl space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
