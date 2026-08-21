@@ -10,16 +10,27 @@ interface ActiveBottleTimersProps {
 }
 
 export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
+  const [mounted, setMounted] = useState<boolean>(false);
   const [now, setNow] = useState<number>(Date.now());
   const [alarmPlayed, setAlarmPlayed] = useState<boolean>(false);
 
   // Interval ticker per detik
   useEffect(() => {
+    setMounted(true);
     const interval = setInterval(() => {
       setNow(Date.now());
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  if (!mounted) {
+    return (
+      <div className="bg-card border border-card-border rounded-2xl p-5 shadow-lg animate-pulse">
+        <div className="h-4 bg-slate-800 rounded w-1/3 mb-2" />
+        <div className="h-8 bg-slate-800 rounded" />
+      </div>
+    );
+  }
 
   if (!activeFeeding) {
     return (
@@ -31,18 +42,17 @@ export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
   }
 
   // 1. HITUNG EXPIRATION TIMER (BASI SUSU)
-  // Standard medis: 2 jam (120 menit) setelah dibuat; 1 jam (60 menit) setelah bibir menyentuh botol.
   let expMaxMs = 2 * 60 * 60 * 1000;
-  let expStartMs = new Date(activeFeeding.created_at).getTime();
+  let expStartMs = new Date(activeFeeding.created_at || Date.now()).getTime();
   let timerLabel = 'Basi (2 Jam dari Dibuat)';
 
   if (activeFeeding.status === 'mulai_minum' && activeFeeding.drinking_started_at) {
-    expMaxMs = 1 * 60 * 60 * 1000; // 1 jam
+    expMaxMs = 1 * 60 * 60 * 1000;
     expStartMs = new Date(activeFeeding.drinking_started_at).getTime();
     timerLabel = 'Basi (1 Jam dari Minum)';
   }
 
-  const expElapsedMs = now - expStartMs;
+  const expElapsedMs = Math.max(0, now - (isNaN(expStartMs) ? now : expStartMs));
   const expRemainingMs = Math.max(0, expMaxMs - expElapsedMs);
   const expMinutes = Math.floor(expRemainingMs / (1000 * 60));
   const expSeconds = Math.floor((expRemainingMs % (1000 * 60)) / 1000);
@@ -52,16 +62,15 @@ export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
   let uprightRemainingMs = 0;
   let uprightPercent = 0;
   let isUprightActive = false;
-  const UPRIGHT_DURATION_MS = 20 * 60 * 1000; // 20 Menit
+  const UPRIGHT_DURATION_MS = 20 * 60 * 1000;
 
   if (activeFeeding.status === 'selesai' && activeFeeding.finished_at) {
     const finishedMs = new Date(activeFeeding.finished_at).getTime();
-    const uprightElapsedMs = now - finishedMs;
+    const uprightElapsedMs = Math.max(0, now - (isNaN(finishedMs) ? now : finishedMs));
     uprightRemainingMs = Math.max(0, UPRIGHT_DURATION_MS - uprightElapsedMs);
     isUprightActive = uprightRemainingMs > 0;
     uprightPercent = (uprightRemainingMs / UPRIGHT_DURATION_MS) * 100;
 
-    // Trigger Alarm ketika waktu 20 menit tegak habis
     if (uprightRemainingMs === 0 && !alarmPlayed) {
       playAlertSound('finish');
       setAlarmPlayed(true);
@@ -110,7 +119,6 @@ export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
             </div>
           </div>
 
-          {/* Progress Bar Basi */}
           <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden mt-3">
             <div
               className={`h-full transition-all duration-1000 ${
@@ -158,7 +166,6 @@ export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
             )}
           </div>
 
-          {/* Progress Bar Posisi Tegak */}
           <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-indigo-500 to-cyan-400 transition-all duration-1000"

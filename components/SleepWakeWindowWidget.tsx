@@ -19,38 +19,48 @@ export function SleepWakeWindowWidget({ babyAgeMonths = 2 }: SleepWakeWindowWidg
     wakeUp,
   } = useBabySleep();
 
+  const [mounted, setMounted] = useState<boolean>(false);
   const [nowMs, setNowMs] = useState<number>(Date.now());
 
   useEffect(() => {
+    setMounted(true);
     const interval = setInterval(() => {
       setNowMs(Date.now());
     }, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  // Cari panduan Wake Window dari JSON berdasarkan umur
-  const matchedGuide = guideData.ageRanges.find(
-    (g) => babyAgeMonths >= g.minMonths && babyAgeMonths < g.maxMonths
-  ) || guideData.ageRanges[1]; // default 1-3 bulan
+  const defaultGuide = guideData.ageRanges[1] || guideData.ageRanges[0];
+  const matchedGuide =
+    guideData.ageRanges.find((g) => babyAgeMonths >= g.minMonths && babyAgeMonths < g.maxMonths) || defaultGuide;
 
-  const wakeWindowConfig = matchedGuide.sleep.wakeWindowMinutes;
-  const maxWakeMinutes = wakeWindowConfig.max;
+  const wakeWindowConfig = matchedGuide?.sleep?.wakeWindowMinutes || { min: 60, max: 90, label: '60 – 90 Menit' };
+  const maxWakeMinutes = wakeWindowConfig.max || 90;
 
   // Hitung durasi
   let currentSleepMins = 0;
   let currentWakeMins = 0;
 
   if (isSleeping && sleepStartMs) {
-    currentSleepMins = Math.floor((nowMs - sleepStartMs) / 60000);
+    currentSleepMins = Math.max(0, Math.floor((nowMs - sleepStartMs) / 60000));
   } else {
-    currentWakeMins = Math.floor((nowMs - lastWakeTimeMs) / 60000);
+    currentWakeMins = Math.max(0, Math.floor((nowMs - (lastWakeTimeMs || Date.now())) / 60000));
   }
 
   const wakeHours = Math.floor(currentWakeMins / 60);
   const wakeMinsRem = currentWakeMins % 60;
 
   const isOvertired = !isSleeping && currentWakeMins >= maxWakeMinutes;
-  const isNearNapTime = !isSleeping && currentWakeMins >= maxWakeMinutes - 15;
+  const isNearNapTime = !isSleeping && currentWakeMins >= Math.max(10, maxWakeMinutes - 15);
+
+  if (!mounted) {
+    return (
+      <div className="bg-card border border-card-border rounded-2xl p-5 shadow-lg animate-pulse">
+        <div className="h-4 bg-slate-800 rounded w-1/3 mb-2" />
+        <div className="h-8 bg-slate-800 rounded" />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-card border border-card-border rounded-2xl p-5 shadow-xl space-y-4">
@@ -142,7 +152,7 @@ export function SleepWakeWindowWidget({ babyAgeMonths = 2 }: SleepWakeWindowWidg
           <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Total Tidur Hari Ini:
         </span>
         <span className="font-bold text-white">
-          {Math.floor(totalSleepMinutesToday / 60)} Jam {totalSleepMinutesToday % 60} Menit / target {matchedGuide.sleep.totalSleepHours}
+          {Math.floor((totalSleepMinutesToday || 0) / 60)} Jam {(totalSleepMinutesToday || 0) % 60} Menit / target {matchedGuide?.sleep?.totalSleepHours || '14 - 16 jam/hari'}
         </span>
       </div>
     </div>
