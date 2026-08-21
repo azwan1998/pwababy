@@ -3,8 +3,8 @@ import { MetadataRoute } from 'next';
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Baby Milk & Activity Tracker',
-    short_name: 'BabyTracker',
-    description: 'Pelacak susu bayi realtime dan aktivitas untuk Ayah & Ibu',
+    short_name: 'Baby Tracker',
+    description: 'Pelacak susu bayi realtime dan aktivitas untuk Ayah & Bunda',
     start_url: '/',
     display: 'standalone',
     background_color: '#0B0F19',

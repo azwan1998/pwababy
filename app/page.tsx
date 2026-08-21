@@ -163,9 +163,10 @@ export default function DashboardPage() {
       {/* FOOTER & PWA INSTALL BANNER */}
       <footer className="text-center py-2 space-y-1">
         <p className="text-[11px] text-slate-500 flex items-center justify-center gap-1">
-          Dibuat dengan <Heart className="w-3 h-3 text-rose-500 fill-current" /> untuk Ayah & Ibu
+          Dibuat dengan <Heart className="w-3 h-3 text-rose-500 fill-current" /> untuk Ayah & Bunda
         </p>
       </footer>
+
 
       {/* 10. BOTTOM MOBILE NAVIGATION BAR (FLOATING NATIVE LOOK) */}
       <BottomMobileNav />

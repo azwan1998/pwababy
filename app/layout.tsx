@@ -3,8 +3,9 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Baby Milk & Activity Tracker (Realtime PWA)',
-  description: 'Aplikasi pelacak susu bayi realtime dan aktivitas untuk Ayah dan Ibu',
+  description: 'Aplikasi pelacak susu bayi realtime dan aktivitas untuk Ayah dan Bunda',
   appleWebApp: {
+
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'Baby Tracker',

@@ -68,8 +68,9 @@ export function DailySummaryShareWidget() {
         onClick={handleWhatsAppShare}
         className="w-full flex items-center justify-center gap-2 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg transition active:scale-95"
       >
-        <MessageSquare className="w-4 h-4" /> Kirim Ringkasan ke WhatsApp Ayah / Ibu
+        <MessageSquare className="w-4 h-4" /> Kirim Ringkasan ke WhatsApp Ayah / Bunda
       </button>
+
     </div>
   );
 }
