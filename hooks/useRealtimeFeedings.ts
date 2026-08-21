@@ -151,13 +151,20 @@ export function useRealtimeFeedings() {
     }
   };
 
+  // Botol aktif hanya jika berstatus 'dibuat' (menunggu minum) atau 'mulai_minum' (sedang minum)
   const activeFeeding = feedings.find(
-    (f) => f.status === 'dibuat' || f.status === 'mulai_minum' || f.status === 'selesai'
+    (f) => f.status === 'dibuat' || f.status === 'mulai_minum'
+  );
+
+  // Botol yang baru saja selesai dalam 20 menit terakhir (untuk timer posisi tegak)
+  const recentFinishedFeeding = feedings.find(
+    (f) => f.status === 'selesai' && f.finished_at && (Date.now() - new Date(f.finished_at).getTime() < 20 * 60 * 1000)
   );
 
   return {
     feedings,
     activeFeeding,
+    recentFinishedFeeding,
     loading,
     createFeeding,
     startDrinking,
@@ -166,3 +173,4 @@ export function useRealtimeFeedings() {
     refresh: fetchFeedings,
   };
 }
+

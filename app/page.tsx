@@ -20,6 +20,7 @@ export default function DashboardPage() {
   const {
     feedings,
     activeFeeding,
+    recentFinishedFeeding,
     createFeeding,
     startDrinking,
     finishFeeding,
@@ -73,7 +74,7 @@ export default function DashboardPage() {
       />
 
       {/* 4. SMART TIMERS (COUNTDOWN BASI & POSISI TEGAK 20 MIN) */}
-      <ActiveBottleTimers activeFeeding={activeFeeding} />
+      <ActiveBottleTimers activeFeeding={activeFeeding} recentFinishedFeeding={recentFinishedFeeding} />
 
       {/* 5. WIDGET DURASI TIDUR & WAKE WINDOW HARIAN */}
       <SleepWakeWindowWidget babyAgeMonths={babyAgeMonths} />

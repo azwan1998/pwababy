@@ -7,9 +7,10 @@ import { playAlertSound } from '@/lib/audioAlert';
 
 interface ActiveBottleTimersProps {
   activeFeeding?: FeedingLog;
+  recentFinishedFeeding?: FeedingLog;
 }
 
-export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
+export function ActiveBottleTimers({ activeFeeding, recentFinishedFeeding }: ActiveBottleTimersProps) {
   const [mounted, setMounted] = useState<boolean>(false);
   const [now, setNow] = useState<number>(Date.now());
   const [alarmPlayed, setAlarmPlayed] = useState<boolean>(false);
@@ -32,7 +33,7 @@ export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
     );
   }
 
-  if (!activeFeeding) {
+  if (!activeFeeding && !recentFinishedFeeding) {
     return (
       <div className="bg-card border border-card-border rounded-2xl p-5 shadow-lg flex items-center gap-3 text-slate-400">
         <Clock className="w-5 h-5 text-slate-500" />
@@ -43,10 +44,10 @@ export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
 
   // 1. HITUNG EXPIRATION TIMER (BASI SUSU)
   let expMaxMs = 2 * 60 * 60 * 1000;
-  let expStartMs = new Date(activeFeeding.created_at || Date.now()).getTime();
+  let expStartMs = activeFeeding ? new Date(activeFeeding.created_at || Date.now()).getTime() : 0;
   let timerLabel = 'Basi (2 Jam dari Dibuat)';
 
-  if (activeFeeding.status === 'mulai_minum' && activeFeeding.drinking_started_at) {
+  if (activeFeeding && activeFeeding.status === 'mulai_minum' && activeFeeding.drinking_started_at) {
     expMaxMs = 1 * 60 * 60 * 1000;
     expStartMs = new Date(activeFeeding.drinking_started_at).getTime();
     timerLabel = 'Basi (1 Jam dari Minum)';
@@ -64,8 +65,8 @@ export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
   let isUprightActive = false;
   const UPRIGHT_DURATION_MS = 20 * 60 * 1000;
 
-  if (activeFeeding.status === 'selesai' && activeFeeding.finished_at) {
-    const finishedMs = new Date(activeFeeding.finished_at).getTime();
+  if (recentFinishedFeeding && recentFinishedFeeding.finished_at) {
+    const finishedMs = new Date(recentFinishedFeeding.finished_at).getTime();
     const uprightElapsedMs = Math.max(0, now - (isNaN(finishedMs) ? now : finishedMs));
     uprightRemainingMs = Math.max(0, UPRIGHT_DURATION_MS - uprightElapsedMs);
     isUprightActive = uprightRemainingMs > 0;
@@ -85,12 +86,12 @@ export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
           <h3 className="text-sm font-bold text-white">Smart Bottle & Health Timers</h3>
         </div>
         <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
-          Realtime
+          Realtime Sync
         </span>
       </div>
 
       {/* A. TIMER KETAHANAN / BASI SUSU */}
-      {(activeFeeding.status === 'dibuat' || activeFeeding.status === 'mulai_minum') && (
+      {activeFeeding && (activeFeeding.status === 'dibuat' || activeFeeding.status === 'mulai_minum') && (
         <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
           <div className="flex justify-between items-start mb-2">
             <div>
@@ -100,7 +101,7 @@ export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
                 ) : (
                   <AlertTriangle className="w-4 h-4 text-amber-400" />
                 )}
-                Countdown Susu Basi
+                Countdown Susu Basi ({activeFeeding.amount_ml} ml)
               </p>
               <p className="text-[10px] text-slate-400 mt-0.5">{timerLabel}</p>
             </div>
@@ -140,8 +141,8 @@ export function ActiveBottleTimers({ activeFeeding }: ActiveBottleTimersProps) {
         </div>
       )}
 
-      {/* B. TIMER POSISI TEGAK 20 MENIT (ANTI-REFLUKS) */}
-      {activeFeeding.status === 'selesai' && (
+      {/* B. TIMER POSISI TEGAK 20 MENIT (ANTI-REFLUKS / SENDAWA) */}
+      {recentFinishedFeeding && (
         <div className="bg-indigo-950/40 border border-indigo-500/30 p-4 rounded-xl space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
