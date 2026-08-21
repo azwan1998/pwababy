@@ -9,15 +9,21 @@
   --card-border: #1F2937;
   --card-sub-bg: #0F172A;
   --subtext: #94A3B8;
+  --nav-bg: rgba(17, 24, 39, 0.95);
+  --nav-btn-bg: rgba(15, 23, 42, 0.6);
+  --nav-btn-text: #94A3B8;
 }
 
 html.light {
-  --background: #F1F5F9;
+  --background: #F8FAFC;
   --foreground: #0F172A;
   --card-bg: #FFFFFF;
   --card-border: #E2E8F0;
   --card-sub-bg: #F8FAFC;
-  --subtext: #475569;
+  --subtext: #64748B;
+  --nav-bg: rgba(255, 255, 255, 0.96);
+  --nav-btn-bg: #F1F5F9;
+  --nav-btn-text: #64748B;
 }
 
 body {
@@ -27,28 +33,28 @@ body {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
 }
 
 /* ==============================================================================
- * STYLING KHUSUS MODE SIANG (LIGHT MODE BEAUTIFICATION)
+ * STYLING SERAGAM MODE SIANG (BUTTERY SMOOTH LIGHT PALETTE)
  * ============================================================================== */
 html.light body {
-  background: linear-gradient(180deg, #F8FAFC 0%, #EEF2FF 50%, #F1F5F9 100%);
+  background: linear-gradient(180deg, #F8FAFC 0%, #EEF2FF 40%, #F1F5F9 100%);
   color: #0F172A;
 }
 
-/* Kartu Utamasiang: Putih Bersih dengan Shadow Lembut */
+/* Kartu Utama di Mode Siang */
 html.light .bg-card {
   background-color: #FFFFFF !important;
   border-color: #E2E8F0 !important;
   color: #0F172A !important;
-  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03) !important;
+  box-shadow: 0 10px 30px -5px rgba(99, 102, 241, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.02) !important;
 }
 
-/* Kontainer Dalam / Well Box */
-html.light .bg-slate-900\/80,
+/* Kotak Kontainer Dalam (Well Box) */
 html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/80,
 html.light .bg-slate-900\/90,
 html.light .bg-slate-900,
 html.light .bg-slate-950\/40,
@@ -57,17 +63,28 @@ html.light .bg-slate-950\/50 {
   border-color: #E2E8F0 !important;
 }
 
-/* Tombol Preset Botol & Aksot dalam Mode Siang */
-html.light button.bg-slate-900\/80 {
-  background-color: #F8FAFC !important;
-  border-color: #CBD5E1 !important;
+/* Tombol Preset Susu di Mode Siang */
+html.light button.bg-slate-900\/80,
+html.light button.bg-slate-900\/60 {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #0F172A !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03) !important;
 }
 html.light button.bg-slate-900\/80:hover {
   background-color: #EEF2FF !important;
-  border-color: #818CF8 !important;
+  border-color: #A5B4FC !important;
 }
 
-/* Teks Header & Subteks */
+/* Badge Sendok Takaran di Mode Siang */
+html.light .bg-slate-800\/80,
+html.light .bg-slate-800 {
+  background-color: #EEF2FF !important;
+  border-color: #C7D2FE !important;
+  color: #4338CA !important;
+}
+
+/* Teks Header & Subteks di Mode Siang */
 html.light .text-white {
   color: #0F172A !important;
 }
@@ -81,7 +98,7 @@ html.light .text-slate-500 {
   color: #64748B !important;
 }
 
-/* Input Fields dalam Mode Siang */
+/* Input Form di Mode Siang */
 html.light input,
 html.light select,
 html.light textarea {
@@ -90,23 +107,45 @@ html.light textarea {
   color: #0F172A !important;
 }
 
-/* Garis Batas / Border */
+/* Garis Border di Mode Siang */
 html.light .border-slate-800,
 html.light .border-slate-700 {
   border-color: #E2E8F0 !important;
 }
 
-/* Badges & Accents dalam Mode Siang */
-html.light .bg-slate-800 {
-  background-color: #E2E8F0 !important;
-  color: #1E293B !important;
+/* ==============================================================================
+ * STYLING KHUSUS MENU BAWAH DI MODE SIANG (BOTTOM NAV UNIFORMITY)
+ * ============================================================================== */
+html.light .bg-card\/95 {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 10px 40px -10px rgba(99, 102, 241, 0.15) !important;
 }
 
-/* Alert Boxes dalam Mode Siang */
+html.light .nav-inactive-btn {
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  border-color: #E2E8F0 !important;
+}
+html.light .nav-inactive-btn:hover {
+  background-color: #EEF2FF !important;
+  color: #4338CA !important;
+}
+
+/* Tombol Susu Inaktif di Mode Siang */
+html.light .milk-hero-inactive {
+  background-color: #FFFFFF !important;
+  border-color: #C7D2FE !important;
+  color: #4F46E5 !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15) !important;
+}
+
+/* Alert Boxes di Mode Siang */
 html.light .bg-indigo-950\/40,
 html.light .bg-indigo-950\/30 {
   background-color: #EEF2FF !important;
   border-color: #C7D2FE !important;
+  color: #3730A3 !important;
 }
 
 html.light .bg-rose-500\/10 {
@@ -130,21 +169,34 @@ html.light .bg-emerald-500\/10 {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--background);
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #CBD5E1;
   border-radius: 9999px;
 }
-
-@keyframes bounce-short {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+html.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
 }
 
-.animate-bounce-short {
-  animation: bounce-short 2s ease-in-out infinite;
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+}
+
+.animate-float-slow {
+  animation: float-slow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.4); }
+  50% { box-shadow: 0 0 25px rgba(139, 92, 246, 0.7); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s infinite;
 }
