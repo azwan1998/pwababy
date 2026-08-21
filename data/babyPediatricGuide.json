@@ -10,6 +10,8 @@
         "portionPerFeedingMl": "65 – 100 ml",
         "frequency": "6 – 8 kali/hari",
         "suggestedPresetMl": 65,
+        "intervalHours": 2.5,
+        "intervalLabel": "2.5 Jam",
         "note": "Rumus standar kebutuhan susu: ~150 ml x Berat Badan (kg) per hari."
       },
       "sleep": {
@@ -35,6 +37,8 @@
         "portionPerFeedingMl": "100 – 135 ml",
         "frequency": "5 – 6 kali/hari",
         "suggestedPresetMl": 135,
+        "intervalHours": 3.0,
+        "intervalLabel": "3 Jam",
         "note": "Bayi mulai minum lebih banyak per sesi dengan jeda 3-4 jam."
       },
       "sleep": {
@@ -59,6 +63,8 @@
         "portionPerFeedingMl": "135 – 165 ml",
         "frequency": "5 kali/hari",
         "suggestedPresetMl": 165,
+        "intervalHours": 3.5,
+        "intervalLabel": "3.5 Jam",
         "note": "Kebutuhan susu stabil sebelum memasuki masa MPASI di usia 6 bulan."
       },
       "sleep": {
@@ -83,6 +89,8 @@
         "portionPerFeedingMl": "165 – 200 ml",
         "frequency": "4 kali/hari",
         "suggestedPresetMl": 200,
+        "intervalHours": 4.0,
+        "intervalLabel": "4 Jam",
         "note": "Susu dikombinasikan dengan Makanan Pendamping ASI (MPASI) 2-3x sehari."
       },
       "sleep": {
@@ -107,6 +115,8 @@
         "portionPerFeedingMl": "200 – 235 ml",
         "frequency": "3 – 4 kali/hari",
         "suggestedPresetMl": 235,
+        "intervalHours": 4.0,
+        "intervalLabel": "4 Jam",
         "note": "Makanan padat menjadi sumber nutrisi utama, susu sebagai pelengkap."
       },
       "sleep": {

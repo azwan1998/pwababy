@@ -27,6 +27,7 @@ export default function DashboardPage() {
     feedings,
     activeFeeding,
     recentFinishedFeeding,
+    lastFinishedFeeding,
     createFeeding,
     startDrinking,
     finishFeeding,
@@ -34,6 +35,17 @@ export default function DashboardPage() {
   } = useRealtimeFeedings();
 
   const { stockData, updateInventory, deductStockLocally } = useFormulaInventory();
+
+  // Hitung umur bayi otomatis dari profil birth_date
+  const effectiveAgeMonths = React.useMemo(() => {
+    if (!profile.birth_date) return babyAgeMonths;
+    const dob = new Date(profile.birth_date);
+    const now = new Date();
+    if (isNaN(dob.getTime())) return babyAgeMonths;
+    let months = (now.getFullYear() - dob.getFullYear()) * 12 + (now.getMonth() - dob.getMonth());
+    if (now.getDate() < dob.getDate()) months--;
+    return Math.max(0, months);
+  }, [profile.birth_date, babyAgeMonths]);
 
   // Trigger pemotongan gram stok lokal & Supabase saat tombol buat susu diklik
   const handleCreateFeeding = (amount_ml: number) => {
@@ -72,14 +84,20 @@ export default function DashboardPage() {
         <div className="space-y-4 animate-fade-in">
           <QuickFeedingActions
             activeFeeding={activeFeeding}
-            babyAgeMonths={babyAgeMonths}
+            babyAgeMonths={effectiveAgeMonths}
             onCreateFeeding={handleCreateFeeding}
             onStartDrinking={startDrinking}
             onFinishFeeding={finishFeeding}
             onDiscardFeeding={discardFeeding}
           />
 
-          <ActiveBottleTimers activeFeeding={activeFeeding} recentFinishedFeeding={recentFinishedFeeding} />
+          <ActiveBottleTimers
+            activeFeeding={activeFeeding}
+            recentFinishedFeeding={recentFinishedFeeding}
+            lastFinishedFeeding={lastFinishedFeeding}
+            babyAgeMonths={effectiveAgeMonths}
+            onCreateFeeding={handleCreateFeeding}
+          />
 
           {/* RIWAYAT MINUM TERAKHIR */}
           <section className="bg-card border border-card-border rounded-2xl p-5 shadow-xl space-y-3">

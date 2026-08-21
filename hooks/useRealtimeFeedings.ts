@@ -161,10 +161,14 @@ export function useRealtimeFeedings() {
     (f) => f.status === 'selesai' && f.finished_at && (Date.now() - new Date(f.finished_at).getTime() < 20 * 60 * 1000)
   );
 
+  // Botol pemberian susu terakhir yang selesai (untuk countdown jadwal minum berikutnya)
+  const lastFinishedFeeding = feedings.find((f) => f.status === 'selesai');
+
   return {
     feedings,
     activeFeeding,
     recentFinishedFeeding,
+    lastFinishedFeeding,
     loading,
     createFeeding,
     startDrinking,
