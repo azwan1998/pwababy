@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pwababy-v2';
+const CACHE_NAME = 'pwababy-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/manifest.webmanifest',
@@ -26,17 +26,36 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Network First Strategy untuk JS & API agar selalu memuat kode terbaru dari Vercel
+// Intercept HANYA request GET lokal http/https (Jangan cegat Supabase / Non-GET)
 self.addEventListener('fetch', (event) => {
-  if (event.request.mode === 'navigate' || event.request.url.includes('_next') || event.request.url.includes('.js')) {
+  // Abaikan non-GET dan non-HTTP (misal chrome-extension atau POST/PUT)
+  if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) {
+    return;
+  }
+
+  // Abaikan request ke Supabase API / Websocket
+  if (event.request.url.includes('supabase.co')) {
+    return;
+  }
+
+  if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).catch(() => caches.match(event.request) || caches.match('/'))
-    );
-  } else {
-    event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        return cachedResponse || fetch(event.request);
+      fetch(event.request).catch(async () => {
+        const cached = await caches.match(event.request);
+        return cached || (await caches.match('/')) || new Response('Offline');
       })
     );
+    return;
   }
+
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request).catch(() => {
+        return new Response('', { status: 408, statusText: 'Offline' });
+      });
+    })
+  );
 });

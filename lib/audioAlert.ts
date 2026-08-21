@@ -1,12 +1,47 @@
 /**
- * Web Audio API Sound Synthesizer
+ * Web Audio API Sound Synthesizer & Vibration API
  * Menghasilkan bunyi alarm/chime lembut untuk notifikasi timer selesai di PWA
- * tanpa bergantung pada file audio mp3 eksternal.
  */
+
+let globalAudioCtx: AudioContext | null = null;
+
+function getAudioContext(): AudioContext | null {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    if (!globalAudioCtx) {
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (AudioContextClass) {
+        globalAudioCtx = new AudioContextClass();
+      }
+    }
+
+    if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
+      globalAudioCtx.resume().catch(() => {});
+    }
+
+    return globalAudioCtx;
+  } catch (err) {
+    console.warn('AudioContext init error:', err);
+    return null;
+  }
+}
+
+// Inisialisasi audio context saat pengguna pertama kali mengetuk layar HP
+if (typeof window !== 'undefined') {
+  const handleFirstInteraction = () => {
+    getAudioContext();
+    window.removeEventListener('click', handleFirstInteraction);
+    window.removeEventListener('touchstart', handleFirstInteraction);
+  };
+  window.addEventListener('click', handleFirstInteraction);
+  window.addEventListener('touchstart', handleFirstInteraction);
+}
+
 export function playAlertSound(type: 'chime' | 'warning' | 'finish' = 'chime') {
   if (typeof window === 'undefined') return;
 
-  // Trigger vibration jika didukung perangkat (HP Ayah / Ibu)
+  // Trigger vibration jika didukung perangkat
   if ('vibrate' in navigator) {
     try {
       navigator.vibrate([200, 100, 200, 100, 400]);
@@ -16,14 +51,12 @@ export function playAlertSound(type: 'chime' | 'warning' | 'finish' = 'chime') {
   }
 
   try {
-    const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextClass) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
 
-    const ctx = new AudioContextClass();
-    
     if (type === 'finish') {
-      // Melodi 3 nada lembut (Do-Mi-Sol) untuk penanda 20 menit posisi tegak selesai
-      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      // Melodi 4 nada lembut (C5, E5, G5, C6)
+      const notes = [523.25, 659.25, 783.99, 1046.50];
       notes.forEach((freq, index) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -42,12 +75,12 @@ export function playAlertSound(type: 'chime' | 'warning' | 'finish' = 'chime') {
         osc.stop(ctx.currentTime + index * 0.18 + 0.45);
       });
     } else {
-      // Chime singkat untuk klik tombol / preset
+      // Chime singkat
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(880, ctx.currentTime); // A5
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
 
       gain.gain.setValueAtTime(0.2, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);

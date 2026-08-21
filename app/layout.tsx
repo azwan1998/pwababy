@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  icons: {
+    icon: '/icons/icon-192.png',
+    shortcut: '/icons/icon-192.png',
+    apple: '/icons/icon-192.png',
+  },
 };
 
 export const viewport: Viewport = {
@@ -31,7 +36,9 @@ export default function RootLayout({
     <html lang="id" className="dark">
       <head>
         <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="icon" href="/icons/icon-192.png" sizes="any" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className="bg-background text-slate-100 min-h-screen selection:bg-indigo-500 selection:text-white antialiased">
         {children}
