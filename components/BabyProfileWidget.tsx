@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Calendar, Baby, Heart, Sparkles, Check, Edit2, Scale, Droplet } from 'lucide-react';
+import { useBabyProfile } from '@/hooks/useBabyProfile';
 import guideData from '@/data/babyPediatricGuide.json';
 
 interface BabyProfileWidgetProps {
@@ -9,22 +10,21 @@ interface BabyProfileWidgetProps {
 }
 
 export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
-  const [babyName, setBabyName] = useState<string>('Si Kecil');
-  const [birthDate, setBirthDate] = useState<string>('2026-06-01'); // Default ~2.5 bulan
-  const [weightKg, setWeightKg] = useState<number>(5.2);
+  const { profile, updateProfile } = useBabyProfile();
+
+  const [babyName, setBabyName] = useState<string>(profile.baby_name);
+  const [birthDate, setBirthDate] = useState<string>(profile.birth_date);
+  const [weightKg, setWeightKg] = useState<number>(profile.weight_kg);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-  // Load dari localStorage jika tersedia
+  // Sync state lokal ketika data profil dari Supabase Realtime diperbarui
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedName = localStorage.getItem('pwababy_name');
-      const savedDob = localStorage.getItem('pwababy_dob');
-      const savedWeight = localStorage.getItem('pwababy_weight');
-      if (savedName) setBabyName(savedName);
-      if (savedDob) setBirthDate(savedDob);
-      if (savedWeight) setWeightKg(parseFloat(savedWeight));
+    if (profile) {
+      setBabyName(profile.baby_name || 'Si Kecil');
+      setBirthDate(profile.birth_date || '2026-06-01');
+      setWeightKg(profile.weight_kg || 5.2);
     }
-  }, []);
+  }, [profile]);
 
   // Hitung Umur Bayi
   const calculateAge = (dobString: string) => {
@@ -63,15 +63,15 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('pwababy_name', babyName);
-      localStorage.setItem('pwababy_dob', birthDate);
-      localStorage.setItem('pwababy_weight', weightKg.toString());
-    }
+    updateProfile({
+      baby_name: babyName,
+      birth_date: birthDate,
+      weight_kg: Number(weightKg),
+    });
     setIsEditing(false);
   };
 
-  // Cari rekomendasi dari data/babyPediatricGuide.json
+  // Cari panduan rekomendasi dari data/babyPediatricGuide.json
   const matchedGuide = guideData.ageRanges.find(
     (g) => age.months >= g.minMonths && age.months < g.maxMonths
   ) || guideData.ageRanges[1];
@@ -88,10 +88,10 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
           </div>
           <div>
             <h3 className="text-base font-extrabold text-white flex items-center gap-1.5">
-              {babyName} <Heart className="w-3.5 h-3.5 text-rose-400 fill-current" />
+              {profile.baby_name} <Heart className="w-3.5 h-3.5 text-rose-400 fill-current" />
             </h3>
             <p className="text-xs font-bold text-amber-400">
-              Umur: {age.text} • BB: <span className="text-emerald-400">{weightKg} kg</span>
+              Umur: {age.text} • BB: <span className="text-emerald-400">{profile.weight_kg} kg</span>
             </p>
           </div>
         </div>
@@ -104,7 +104,7 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
         </button>
       </div>
 
-      {/* FORM EDIT TANGGAL LAHIR & BERAT BADAN */}
+      {/* FORM EDIT TANGGAL LAHIR & BERAT BADAN (SINKRON SUPABASE REALTIME) */}
       {isEditing ? (
         <form onSubmit={handleSave} className="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3">
           <div className="grid grid-cols-2 gap-3">
@@ -152,19 +152,19 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
               type="submit"
               className="flex items-center gap-1 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg transition"
             >
-              <Check className="w-3.5 h-3.5" /> Simpan
+              <Check className="w-3.5 h-3.5" /> Simpan & Sync
             </button>
           </div>
         </form>
       ) : (
-        /* REKOMENDASI OTOMATIS BERDASARKAN UMUR & BERAT BADAN (DARI JSON REFERENCE) */
+        /* REKOMENDASI OTOMATIS BERDASARKAN UMUR & BERAT BADAN (SINKRON SUPABASE & JSON MEDIS) */
         <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800/80 space-y-2.5">
           <div className="flex items-center justify-between text-xs font-bold text-indigo-300">
             <span className="flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-amber-400" />
               Panduan Medis ({matchedGuide.label})
             </span>
-            <span className="text-[10px] text-slate-400">Offline JSON Database</span>
+            <span className="text-[10px] text-slate-400">Realtime Supabase Sync</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2.5 text-xs">
@@ -175,7 +175,7 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
               <span className="font-extrabold text-emerald-400 mt-0.5 block">
                 ~{calcDailyFluidMl} ml / hari
               </span>
-              <span className="text-[9px] text-slate-500 block">Rumus Medis: 150ml x {weightKg}kg</span>
+              <span className="text-[9px] text-slate-500 block">Rumus Medis: 150ml x {profile.weight_kg}kg</span>
             </div>
 
             <div className="bg-slate-950/50 p-2.5 rounded-lg border border-slate-800">

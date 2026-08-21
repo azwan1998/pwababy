@@ -9,7 +9,7 @@ export function useBabySleep() {
   const [sleepLogs, setSleepLogs] = useState<BabyActivity[]>([]);
   const [isSleeping, setIsSleeping] = useState<boolean>(false);
   const [sleepStartMs, setSleepStartMs] = useState<number | null>(null);
-  const [lastWakeTimeMs, setLastWakeTimeMs] = useState<number>(Date.now() - 75 * 60 * 1000); // Default 75 min lalu
+  const [lastWakeTimeMs, setLastWakeTimeMs] = useState<number>(Date.now());
 
   const fetchSleepLogs = useCallback(async () => {
     const todayStart = new Date();
@@ -34,20 +34,12 @@ export function useBabySleep() {
           setIsSleeping(false);
           setLastWakeTimeMs(new Date(latest.finished_at).getTime());
         }
+      } else {
+        setSleepLogs([]);
+        setIsSleeping(false);
       }
     } catch {
-      // Mock fallback
-      setSleepLogs([
-        {
-          id: 'sleep-1',
-          family_id: FAMILY_ID,
-          activity_type: 'sleep',
-          duration_minutes: 90,
-          started_at: new Date(Date.now() - 165 * 60 * 1000).toISOString(),
-          finished_at: new Date(Date.now() - 75 * 60 * 1000).toISOString(),
-          created_at: new Date(Date.now() - 165 * 60 * 1000).toISOString(),
-        },
-      ]);
+      setSleepLogs([]);
     }
   }, []);
 

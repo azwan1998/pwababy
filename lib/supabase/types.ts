@@ -40,7 +40,9 @@ export interface BabyProfile {
   family_id: string;
   baby_name: string;
   birth_date: string; // ISO date format YYYY-MM-DD
+  weight_kg: number;
 }
+
 
 export interface FormulaStockPrediction extends FormulaInventory {
   inventory_id: string;

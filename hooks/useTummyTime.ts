@@ -9,7 +9,7 @@ export function useTummyTime() {
   const [activities, setActivities] = useState<BabyActivity[]>([]);
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
   const [timerSeconds, setTimerSeconds] = useState<number>(0);
-  const [targetSessions] = useState<number>(4); // Target 3-5 sesi / hari
+  const [targetSessions] = useState<number>(4);
 
   const fetchTodayTummyTime = useCallback(async () => {
     const todayStart = new Date();
@@ -25,27 +25,9 @@ export function useTummyTime() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      if (data) setActivities(data as BabyActivity[]);
+      setActivities(data ? (data as BabyActivity[]) : []);
     } catch {
-      // Fallback mock data jika Supabase offline
-      setActivities([
-        {
-          id: 'tt-1',
-          family_id: FAMILY_ID,
-          activity_type: 'tummy_time',
-          duration_minutes: 5,
-          started_at: new Date(Date.now() - 3 * 3600 * 1000).toISOString(),
-          created_at: new Date(Date.now() - 3 * 3600 * 1000).toISOString(),
-        },
-        {
-          id: 'tt-2',
-          family_id: FAMILY_ID,
-          activity_type: 'tummy_time',
-          duration_minutes: 8,
-          started_at: new Date(Date.now() - 6 * 3600 * 1000).toISOString(),
-          created_at: new Date(Date.now() - 6 * 3600 * 1000).toISOString(),
-        },
-      ]);
+      setActivities([]);
     }
   }, []);
 
@@ -54,7 +36,7 @@ export function useTummyTime() {
     fetchTodayTummyTime();
 
     const channel = supabase
-      .channel(`public:baby_activities:${FAMILY_ID}`)
+      .channel(`public:baby_activities_tummy:${FAMILY_ID}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'baby_activities', filter: `family_id=eq.${FAMILY_ID}` },
@@ -67,7 +49,7 @@ export function useTummyTime() {
     };
   }, [fetchTodayTummyTime]);
 
-  // Stopwatch ticker saat timer berjalan
+  // Stopwatch ticker
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isTimerRunning) {
