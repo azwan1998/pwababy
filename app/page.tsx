@@ -5,6 +5,7 @@ import { Milk, Wifi, History, Heart } from 'lucide-react';
 import { useRealtimeFeedings } from '@/hooks/useRealtimeFeedings';
 import { useFormulaInventory } from '@/hooks/useFormulaInventory';
 import { useBabyProfile } from '@/hooks/useBabyProfile';
+import { useGrowthLogs } from '@/hooks/useGrowthLogs';
 import { BabyProfileWidget } from '@/components/BabyProfileWidget';
 import { QuickFeedingActions } from '@/components/QuickFeedingActions';
 import { ActiveBottleTimers } from '@/components/ActiveBottleTimers';
@@ -12,9 +13,10 @@ import { StockInventoryWidget } from '@/components/StockInventoryWidget';
 import { SleepWakeWindowWidget } from '@/components/SleepWakeWindowWidget';
 import { TummyTimeWidget } from '@/components/TummyTimeWidget';
 import { DiaperTrackerWidget } from '@/components/DiaperTrackerWidget';
-import { DailySummaryShareWidget } from '@/components/DailySummaryShareWidget';
+import { DoctorReportWidget } from '@/components/DoctorReportWidget';
 import { KmsGrowthWidget } from '@/components/KmsGrowthWidget';
 import { WhiteNoiseWidget } from '@/components/WhiteNoiseWidget';
+import { FeverMedicationWidget } from '@/components/FeverMedicationWidget';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { BottomMobileNav, TabType } from '@/components/BottomMobileNav';
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
@@ -24,6 +26,7 @@ export default function DashboardPage() {
   const [babyAgeMonths, setBabyAgeMonths] = useState<number>(2);
 
   const { profile } = useBabyProfile();
+  const { latestLog } = useGrowthLogs();
 
   const {
     feedings,
@@ -37,6 +40,9 @@ export default function DashboardPage() {
   } = useRealtimeFeedings();
 
   const { stockData, updateInventory, deductStockLocally } = useFormulaInventory();
+
+  // Berat badan terkini dari KMS (atau fallback profile)
+  const displayWeight = latestLog?.weight_kg || profile.weight_kg || 5.2;
 
   // Hitung umur bayi otomatis dari profil birth_date
   const effectiveAgeMonths = React.useMemo(() => {
@@ -69,7 +75,7 @@ export default function DashboardPage() {
             </h1>
             <p className="text-[10px] text-slate-400 flex items-center gap-1 font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping inline-block" />
-              <Wifi className="w-2.5 h-2.5 text-emerald-400" /> {profile.weight_kg} kg • Realtime
+              <Wifi className="w-2.5 h-2.5 text-emerald-400" /> {displayWeight} kg • Realtime
             </p>
           </div>
         </div>
@@ -175,6 +181,13 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {/* TAB: CATATAN DEMAM & OBAT */}
+      {activeTab === 'demam' && (
+        <div className="space-y-4 animate-fade-in">
+          <FeverMedicationWidget />
+        </div>
+      )}
+
       {/* TAB 4: TIDUR & WAKE WINDOW */}
       {activeTab === 'tidur' && (
         <div className="space-y-4 animate-fade-in">
@@ -203,10 +216,10 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* TAB 6: REKAP HARIAN & WHATSAPP SHARE */}
+      {/* TAB 6: REKAP MEDIS DOKTER ANAK (DSA) */}
       {activeTab === 'rekap' && (
         <div className="space-y-4 animate-fade-in">
-          <DailySummaryShareWidget />
+          <DoctorReportWidget />
         </div>
       )}
 

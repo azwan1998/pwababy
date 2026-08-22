@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Baby, Heart, Sparkles, Check, Edit2, Scale, Droplet } from 'lucide-react';
 import { useBabyProfile } from '@/hooks/useBabyProfile';
+import { useGrowthLogs } from '@/hooks/useGrowthLogs';
 import guideData from '@/data/babyPediatricGuide.json';
 
 interface BabyProfileWidgetProps {
@@ -11,11 +12,11 @@ interface BabyProfileWidgetProps {
 
 export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
   const { profile, updateProfile } = useBabyProfile();
+  const { latestLog } = useGrowthLogs();
   const [mounted, setMounted] = useState<boolean>(false);
 
   const [babyName, setBabyName] = useState<string>('Si Kecil');
   const [birthDate, setBirthDate] = useState<string>('2026-06-01');
-  const [weightKg, setWeightKg] = useState<number>(5.2);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   useEffect(() => {
@@ -26,7 +27,6 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
     if (profile) {
       setBabyName(profile.baby_name || 'Si Kecil');
       setBirthDate(profile.birth_date || '2026-06-01');
-      setWeightKg(Number(profile.weight_kg) || 5.2);
     }
   }, [profile]);
 
@@ -69,11 +69,9 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    const safeWeight = Math.max(1, Number(weightKg) || 5.2);
     updateProfile({
       baby_name: babyName || 'Si Kecil',
       birth_date: birthDate || '2026-06-01',
-      weight_kg: safeWeight,
     });
     setIsEditing(false);
   };
@@ -83,7 +81,8 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
   const matchedGuide =
     guideData.ageRanges.find((g) => age.months >= g.minMonths && age.months < g.maxMonths) || defaultGuide;
 
-  const currentWeight = Number(profile.weight_kg) || 5.2;
+  // Berat badan otomatis diambil dari timbangan KMS terbaru (atau profile jika belum ada timbangan)
+  const currentWeight = latestLog?.weight_kg || Number(profile.weight_kg) || 5.2;
   const calcDailyFluidMl = Math.round(currentWeight * 150);
 
   if (!mounted) {
@@ -107,7 +106,7 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
               {profile.baby_name || 'Si Kecil'} <Heart className="w-3.5 h-3.5 text-rose-400 fill-current" />
             </h3>
             <p className="text-xs font-bold text-amber-400">
-              Umur: {age.text} • BB: <span className="text-emerald-400">{currentWeight} kg</span>
+              Umur: {age.text} • BB: <span className="text-emerald-400 font-extrabold">{currentWeight} kg</span>
             </p>
           </div>
         </div>
@@ -120,38 +119,27 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
         </button>
       </div>
 
-      {/* FORM EDIT TANGGAL LAHIR & BERAT BADAN */}
+      {/* FORM EDIT TANGGAL LAHIR & NAMA (BERAT BADAN DARI KMS) */}
       {isEditing ? (
         <form onSubmit={handleSave} className="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3">
           <div className="grid grid-cols-2 gap-3">
-            <div>
+            <div className="col-span-2">
               <label className="text-[11px] text-slate-400 block mb-1">Nama Bayi</label>
               <input
                 type="text"
                 value={babyName}
                 onChange={(e) => setBabyName(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white"
+                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
                 required
               />
             </div>
-            <div>
+            <div className="col-span-2">
               <label className="text-[11px] text-slate-400 block mb-1">Tanggal Lahir</label>
               <input
                 type="date"
                 value={birthDate}
                 onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white"
-                required
-              />
-            </div>
-            <div className="col-span-2">
-              <label className="text-[11px] text-slate-400 block mb-1">Berat Badan (kg)</label>
-              <input
-                type="number"
-                step="0.1"
-                value={weightKg}
-                onChange={(e) => setWeightKg(parseFloat(e.target.value) || 3.5)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white"
+                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
                 required
               />
             </div>

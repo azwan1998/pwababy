@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { Milk, Moon, Shirt, Package, Activity, Share2, User, TrendingUp, Headphones } from 'lucide-react';
+import { Milk, Moon, Shirt, Package, Activity, User, TrendingUp, Headphones, Stethoscope, Thermometer } from 'lucide-react';
 
-export type TabType = 'popok' | 'tidur' | 'susu' | 'kms' | 'suara' | 'stok' | 'tummy' | 'rekap' | 'profil';
+export type TabType = 'popok' | 'tidur' | 'susu' | 'tummy' | 'demam' | 'suara' | 'stok' | 'kms' | 'rekap' | 'profil';
 
 interface BottomMobileNavProps {
   activeTab: TabType;
@@ -15,15 +15,17 @@ export function BottomMobileNav({ activeTab, onTabChange }: BottomMobileNavProps
   const isProgrammaticScroll = useRef<boolean>(false);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  // Susu di posisi tengah, Tummy & Demam berdampingan
   const navItems: { id: TabType; label: string; icon: React.ReactNode }[] = [
     { id: 'popok', label: 'Popok', icon: <Shirt className="w-5 h-5" /> },
     { id: 'tidur', label: 'Tidur', icon: <Moon className="w-5 h-5" /> },
     { id: 'susu', label: 'Susu', icon: <Milk className="w-5 h-5" /> },
-    { id: 'kms', label: 'KMS', icon: <TrendingUp className="w-5 h-5" /> },
+    { id: 'tummy', label: 'Tummy', icon: <Activity className="w-5 h-5" /> },
+    { id: 'demam', label: 'Demam', icon: <Thermometer className="w-5 h-5" /> },
     { id: 'suara', label: 'Suara', icon: <Headphones className="w-5 h-5" /> },
     { id: 'stok', label: 'Stok', icon: <Package className="w-5 h-5" /> },
-    { id: 'tummy', label: 'Tummy', icon: <Activity className="w-5 h-5" /> },
-    { id: 'rekap', label: 'Rekap', icon: <Share2 className="w-5 h-5" /> },
+    { id: 'kms', label: 'KMS', icon: <TrendingUp className="w-5 h-5" /> },
+    { id: 'rekap', label: 'Rekap', icon: <Stethoscope className="w-5 h-5" /> },
     { id: 'profil', label: 'Profil', icon: <User className="w-5 h-5" /> },
   ];
 

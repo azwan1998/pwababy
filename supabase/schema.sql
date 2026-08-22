@@ -74,6 +74,22 @@ CREATE TABLE IF NOT EXISTS public.growth_logs (
 
 CREATE INDEX IF NOT EXISTS idx_growth_logs_family ON public.growth_logs(family_id, measured_date);
 
+-- 6. TABEL: health_logs (Catatan Demam, Suhu Tubuh & Pemberian Obat)
+CREATE TABLE IF NOT EXISTS public.health_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    family_id TEXT NOT NULL DEFAULT 'family_123',
+    log_type TEXT NOT NULL CHECK (log_type IN ('temperature', 'medication', 'symptom')),
+    temperature_c NUMERIC(4, 2) NULL,
+    medication_name TEXT NULL,
+    dosage TEXT NULL,
+    notes TEXT NULL,
+    recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_health_logs_family_time ON public.health_logs(family_id, recorded_at DESC);
+
 -- ==============================================================================
 -- 6. FUNCTION & TRIGGER: DEDUCT FORMULA STOCK AUTOMATICALLY
 -- ==============================================================================
@@ -169,6 +185,9 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'growth_logs') THEN
         ALTER PUBLICATION supabase_realtime ADD TABLE public.growth_logs;
     END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'health_logs') THEN
+        ALTER PUBLICATION supabase_realtime ADD TABLE public.health_logs;
+    END IF;
 END $$;
 
 
@@ -180,18 +199,21 @@ ALTER TABLE public.feeding_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.baby_activities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.baby_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.growth_logs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.health_logs ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Allow all access to formula_inventories" ON public.formula_inventories;
 DROP POLICY IF EXISTS "Allow all access to feeding_logs" ON public.feeding_logs;
 DROP POLICY IF EXISTS "Allow all access to baby_activities" ON public.baby_activities;
 DROP POLICY IF EXISTS "Allow all access to baby_profiles" ON public.baby_profiles;
 DROP POLICY IF EXISTS "Allow all access to growth_logs" ON public.growth_logs;
+DROP POLICY IF EXISTS "Allow all access to health_logs" ON public.health_logs;
 
 CREATE POLICY "Allow all access to formula_inventories" ON public.formula_inventories FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all access to feeding_logs" ON public.feeding_logs FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all access to baby_activities" ON public.baby_activities FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all access to baby_profiles" ON public.baby_profiles FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all access to growth_logs" ON public.growth_logs FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all access to health_logs" ON public.health_logs FOR ALL USING (true) WITH CHECK (true);
 
 -- Seed Data Awal
 INSERT INTO public.formula_inventories (family_id, brand_name, can_weight_grams, current_weight_grams, grams_per_scoop, ml_per_scoop)

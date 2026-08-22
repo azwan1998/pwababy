@@ -20,19 +20,31 @@ Aplikasi Progressive Web App (PWA) modern untuk melacak pemberian susu bayi, sta
    - Evaluasi otomatis KBM (Kenaikan Berat Minimum Kemenkes RI) dan status gizi WHO.
    - Grafik interaktif responsif SVG dengan visualisasi kurva pita standar WHO.
 
-4. **White Noise & Shusher Player (100% Offline):**
+4. **Catatan Demam, Suhu Tubuh & Obat:**
+   - Log suhu tubuh (°C) lengkap dengan status otomatis (*Normal, Subfebris, Demam, Demam Tinggi*).
+   - Pencatat obat penurun panas (Paracetamol Drop/Sirup, Ibuprofen) & dosis berdasarkan berat badan.
+   - **Smart Safe Interval Timer**: Countdown jeda minimal 4 jam sebelum obat berikutnya aman diberikan untuk mencegah overdosis.
+   - Grafik interaktif fluktuasi suhu tubuh 24 jam.
+
+5. **Rekap Medis & Konsultasi Dokter Anak (DSA):**
+   - Dashboard klinis lengkap untuk ditunjukkan langsung saat kontrol ke Dokter Anak / Posyandu.
+   - Ringkasan asupan susu (ml/hari, frekuensi, takaran botol), eliminasi popok (hidrasi pipis & pup), durasi tidur, dan Tummy Time.
+   - Tabel riwayat pertumbuhan KMS & status gizi WHO.
+   - Filter rentang waktu (Hari Ini / 7 Hari Terakhir) dan tombol bagikan cepat ke WhatsApp.
+
+6. **White Noise & Shusher Player (100% Offline):**
    - Web Audio API Sound Synthesizer tanpa butuh file MP3 eksternal & hemat kuota.
    - 7 pilihan suara: Shusher ritmis ("Shhh..."), Rahim & Jantung, Hujan Lembut, Ombak Laut, Kipas Angin, Brown Noise, dan White Noise.
    - Sleep timer otomatis (15m, 30m, 45m, 60m, Non-stop) dengan fade-out halus.
 
-5. **Smart Timers & Health Reminders:**
+7. **Smart Timers & Health Reminders:**
    - Countdown basi susu: 2 jam saat dibuat, 1 jam dari minum.
    - **Countdown 20 menit posisi tegak / anti-refluks (sendawa)** setelah minum selesai, dilengkapi **Audio Alert (Web Audio API)** saat waktu habis.
    - Tracker sesi Tummy Time harian dengan stopwatch live.
    - Pelacak ganti popok (Pipis & Pup) harian.
    - Pelacak waktu tidur & Wake Window.
 
-6. **PWA Mobile-First & Dark Mode:**
+8. **PWA Mobile-First & Dark Mode:**
    - Installable di Homescreen Android/iOS (Web App Manifest + Service Worker).
    - Skema warna Dark Mode Slate/Indigo yang nyaman di mata saat terbangun malam hari.
    - Navigasi geser mobile responsif dengan haptic vibration.

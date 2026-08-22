@@ -56,6 +56,19 @@ export interface GrowthLog {
   updated_at?: string;
 }
 
+export interface HealthLog {
+  id: string;
+  family_id: string;
+  log_type: 'temperature' | 'medication' | 'symptom';
+  temperature_c?: number | null;
+  medication_name?: string | null;
+  dosage?: string | null;
+  notes?: string | null;
+  recorded_at: string;
+  created_at: string;
+  updated_at?: string;
+}
+
 export interface FormulaStockPrediction extends FormulaInventory {
   inventory_id: string;
   total_ml_7d: number;
