@@ -7,6 +7,7 @@ import { useTummyTime } from '@/hooks/useTummyTime';
 import { useBabySleep } from '@/hooks/useBabySleep';
 import { useDiaperTracker } from '@/hooks/useDiaperTracker';
 import { useBabyProfile } from '@/hooks/useBabyProfile';
+import { useGrowthLogs } from '@/hooks/useGrowthLogs';
 
 export function DailySummaryShareWidget() {
   const [copied, setCopied] = useState<boolean>(false);
@@ -15,6 +16,7 @@ export function DailySummaryShareWidget() {
   const { totalMinutesToday: tummyMins, completedSessionsToday: tummyCount } = useTummyTime();
   const { totalSleepMinutesToday: sleepMins } = useBabySleep();
   const { pipisCount, pupCount } = useDiaperTracker();
+  const { latestLog, whoStatus } = useGrowthLogs();
 
   // Hitung total ml susu hari ini
   const todayFeedings = feedings.filter((f) => f.status !== 'dibuang');
@@ -27,12 +29,13 @@ export function DailySummaryShareWidget() {
   });
 
   const summaryText = `🍼 *REKAP HARIAN BABY TRACKER* (${todayStr})
-👶 *Nama*: ${profile.baby_name} (${profile.weight_kg} kg)
+👶 *Nama*: ${profile.baby_name} (${latestLog?.weight_kg || profile.weight_kg} kg)
 
 🥛 *Susu*: ${totalMlToday} ml (${todayFeedings.length}x pemberian)
 😴 *Tidur*: ${Math.floor(sleepMins / 60)}j ${sleepMins % 60}m
 👶 *Tummy Time*: ${tummyCount} sesi (${tummyMins} menit)
-🪆 *Popok*: ${pipisCount}x Pipis, ${pupCount}x Pup`;
+🪆 *Popok*: ${pipisCount}x Pipis, ${pupCount}x Pup
+📈 *KMS*: ${latestLog ? `${latestLog.weight_kg} kg (${whoStatus.label})` : `${profile.weight_kg} kg`}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(summaryText);

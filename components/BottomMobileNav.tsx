@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { Milk, Moon, Shirt, Package, Activity, Share2, User } from 'lucide-react';
+import { Milk, Moon, Shirt, Package, Activity, Share2, User, TrendingUp, Headphones } from 'lucide-react';
 
-export type TabType = 'popok' | 'tidur' | 'susu' | 'stok' | 'tummy' | 'rekap' | 'profil';
+export type TabType = 'popok' | 'tidur' | 'susu' | 'kms' | 'suara' | 'stok' | 'tummy' | 'rekap' | 'profil';
 
 interface BottomMobileNavProps {
   activeTab: TabType;
@@ -19,6 +19,8 @@ export function BottomMobileNav({ activeTab, onTabChange }: BottomMobileNavProps
     { id: 'popok', label: 'Popok', icon: <Shirt className="w-5 h-5" /> },
     { id: 'tidur', label: 'Tidur', icon: <Moon className="w-5 h-5" /> },
     { id: 'susu', label: 'Susu', icon: <Milk className="w-5 h-5" /> },
+    { id: 'kms', label: 'KMS', icon: <TrendingUp className="w-5 h-5" /> },
+    { id: 'suara', label: 'Suara', icon: <Headphones className="w-5 h-5" /> },
     { id: 'stok', label: 'Stok', icon: <Package className="w-5 h-5" /> },
     { id: 'tummy', label: 'Tummy', icon: <Activity className="w-5 h-5" /> },
     { id: 'rekap', label: 'Rekap', icon: <Share2 className="w-5 h-5" /> },

@@ -43,6 +43,18 @@ export interface BabyProfile {
   weight_kg: number;
 }
 
+export interface GrowthLog {
+  id: string;
+  family_id: string;
+  measured_date: string; // YYYY-MM-DD
+  age_months: number;
+  weight_kg: number;
+  height_cm?: number | null;
+  head_circ_cm?: number | null;
+  notes?: string | null;
+  created_at: string;
+  updated_at?: string;
+}
 
 export interface FormulaStockPrediction extends FormulaInventory {
   inventory_id: string;

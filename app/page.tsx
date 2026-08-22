@@ -13,6 +13,8 @@ import { SleepWakeWindowWidget } from '@/components/SleepWakeWindowWidget';
 import { TummyTimeWidget } from '@/components/TummyTimeWidget';
 import { DiaperTrackerWidget } from '@/components/DiaperTrackerWidget';
 import { DailySummaryShareWidget } from '@/components/DailySummaryShareWidget';
+import { KmsGrowthWidget } from '@/components/KmsGrowthWidget';
+import { WhiteNoiseWidget } from '@/components/WhiteNoiseWidget';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { BottomMobileNav, TabType } from '@/components/BottomMobileNav';
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
@@ -159,7 +161,21 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* TAB 2: TIDUR & WAKE WINDOW */}
+      {/* TAB 2: KMS DIGITAL (GRAFIK & PERTUMBUHAN WHO) */}
+      {activeTab === 'kms' && (
+        <div className="space-y-4 animate-fade-in">
+          <KmsGrowthWidget />
+        </div>
+      )}
+
+      {/* TAB 3: WHITE NOISE & SHUSHER PLAYER */}
+      {activeTab === 'suara' && (
+        <div className="space-y-4 animate-fade-in">
+          <WhiteNoiseWidget />
+        </div>
+      )}
+
+      {/* TAB 4: TIDUR & WAKE WINDOW */}
       {activeTab === 'tidur' && (
         <div className="space-y-4 animate-fade-in">
           <SleepWakeWindowWidget babyAgeMonths={babyAgeMonths} />
