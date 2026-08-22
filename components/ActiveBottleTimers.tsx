@@ -215,9 +215,6 @@ export function ActiveBottleTimers({
               <h3 className="text-sm font-extrabold text-white tracking-tight">
                 Jadwal Minum Berikutnya
               </h3>
-              <p className="text-xs text-slate-400">
-                {hasFinishedLog ? `Jeda ${intervalHours} Jam dari Selesai Minum` : 'Menunggu log selesai minum'}
-              </p>
             </div>
           </div>
 
@@ -264,15 +261,51 @@ export function ActiveBottleTimers({
                 : 'bg-slate-900/80 border-slate-800/90'
             }`}
           >
-            <div className="flex items-center justify-between mb-3">
+            {/* HIGHLIGHT UTAMA: WAKTU SELESAI & TARGET MINUM BERIKUTNYA */}
+            <div className="grid grid-cols-2 gap-2.5 mb-3.5">
+              {/* KOTAK SELESAI MINUM */}
+              <div className="p-3 rounded-2xl bg-slate-950/80 border border-slate-800/90 shadow-sm flex flex-col justify-between">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1.5 uppercase tracking-wider">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Selesai
+                  </span>
+                  {lastFinishedAmount > 0 && (
+                    <span className="text-[10px] font-extrabold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded-md border border-emerald-500/20">
+                      {lastFinishedAmount} ml
+                    </span>
+                  )}
+                </div>
+                <div className="text-xl font-black text-white font-mono tracking-tight">
+                  {formatClock(finishedTimeMs)}
+                </div>
+              </div>
+
+              {/* KOTAK TARGET MINUM BERIKUTNYA */}
+              <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 shadow-md shadow-amber-950/20 flex flex-col justify-between">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-bold text-amber-300 flex items-center gap-1.5 uppercase tracking-wider">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Target
+                  </span>
+                  <span className="text-[10px] font-bold text-amber-400/80 bg-amber-400/10 px-1.5 py-0.5 rounded-md">
+                    +{intervalHours} Jam
+                  </span>
+                </div>
+                <div className="text-xl font-black text-amber-300 font-mono tracking-tight">
+                  {formatClock(targetNextFeedingMs)}
+                </div>
+              </div>
+            </div>
+
+            {/* SISA WAKTU COUNTDOWN */}
+            <div className="bg-slate-950/50 p-3 rounded-xl border border-slate-800/60 mb-3 flex items-center justify-between">
               <div>
-                <p className="text-[11px] font-semibold text-slate-400 flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-indigo-400" />
-                  {isNextFeedOverdue ? 'Waktu Terlewat:' : 'Sisa Waktu:'}
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-indigo-400" />
+                  {isNextFeedOverdue ? 'Waktu Terlewat' : 'Sisa Waktu'}
                 </p>
-                <div className="flex items-baseline gap-1 mt-1">
+                <div className="flex items-baseline gap-1 mt-0.5">
                   <span
-                    className={`text-3xl font-black font-mono tracking-tight ${
+                    className={`text-2xl font-black font-mono tracking-tight ${
                       isNextFeedOverdue
                         ? 'text-rose-400 animate-pulse'
                         : isNearNextFeed
@@ -283,27 +316,24 @@ export function ActiveBottleTimers({
                     {nextFeedHours > 0 && `${String(nextFeedHours).padStart(2, '0')}:`}
                     {String(nextFeedMins).padStart(2, '0')}:{String(nextFeedSecs).padStart(2, '0')}
                   </span>
-                  <span className="text-[11px] font-bold text-slate-400">
+                  <span className="text-[10px] font-bold text-slate-400">
                     {isNextFeedOverdue ? 'lewat' : 'lagi'}
                   </span>
                 </div>
               </div>
 
-              {/* INFO WAKTU FINISH & TARGET */}
-              <div className="text-right space-y-1">
-                <div className="text-[10px] text-slate-400">
-                  <span>Selesai: </span>
-                  <span className="font-bold text-slate-200">{formatClock(finishedTimeMs)}</span>
-                  {lastFinishedAmount > 0 && (
-                    <span className="text-indigo-400 ml-1">({lastFinishedAmount}ml)</span>
-                  )}
-                </div>
-                <div className="text-xs">
-                  <span className="text-slate-400 text-[10px]">Target: </span>
-                  <span className="font-black text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-lg border border-amber-500/20">
-                    {formatClock(targetNextFeedingMs)}
-                  </span>
-                </div>
+              <div className="text-right">
+                <span
+                  className={`text-xs font-black px-2.5 py-1 rounded-lg border ${
+                    isNextFeedOverdue
+                      ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+                      : isNearNextFeed
+                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                      : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'
+                  }`}
+                >
+                  {nextFeedProgressPercent.toFixed(0)}%
+                </span>
               </div>
             </div>
 
@@ -350,7 +380,7 @@ export function ActiveBottleTimers({
               <div className="mt-3 bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl flex items-center gap-2 text-xs text-amber-200">
                 <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0" />
                 <span>
-                  Tinggal {nextFeedMins} menit lagi. Siapkan botol & air hangat.
+                  Sisa {nextFeedMins} menit lagi. Siapkan botol susu.
                 </span>
               </div>
             ) : null}
@@ -359,10 +389,7 @@ export function ActiveBottleTimers({
           <div className="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center space-y-2">
             <Clock className="w-8 h-8 text-slate-600 mx-auto" />
             <p className="text-xs text-slate-300 font-semibold">
-              Belum ada riwayat minum yang diselesaikan hari ini.
-            </p>
-            <p className="text-[11px] text-slate-500">
-              Tekan tombol takaran di atas untuk membuat botol baru. Setelah selesai minum, countdown otomatis aktif.
+              Belum ada riwayat minum hari ini.
             </p>
           </div>
         )}
@@ -415,7 +442,7 @@ export function ActiveBottleTimers({
               <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
                 <ShieldAlert className="w-4 h-4" />
               </div>
-              <h4 className="text-xs font-bold text-white">Timer Ketahanan Susu ({activeFeeding.amount_ml} ml)</h4>
+              <h4 className="text-xs font-bold text-white">Ketahanan Susu ({activeFeeding.amount_ml} ml)</h4>
             </div>
             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
               {activeFeeding.status === 'dibuat' ? 'Susu Baru' : 'Sedang Minum'}
@@ -431,7 +458,7 @@ export function ActiveBottleTimers({
                   ) : (
                     <AlertTriangle className="w-4 h-4 text-amber-400" />
                   )}
-                  Batas Waktu Aman Minum
+                  Batas Aman Minum
                 </p>
                 <p className="text-[10px] text-slate-400 mt-0.5">{timerLabel}</p>
               </div>
@@ -465,7 +492,7 @@ export function ActiveBottleTimers({
 
             {expRemainingMs === 0 && (
               <p className="text-xs text-rose-400 font-bold mt-2 bg-rose-500/10 p-2 rounded-lg border border-rose-500/20 text-center">
-                ⚠️ Susu sudah melewati batas waktu aman! Segera buang botol ini.
+                ⚠️ Batas aman habis! Segera buang susu ini.
               </p>
             )}
           </div>
@@ -481,8 +508,8 @@ export function ActiveBottleTimers({
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-300">👶</div>
               <div>
-                <h4 className="text-xs font-bold text-white">Timer Posisi Tegak (20 Menit)</h4>
-                <p className="text-[10px] text-indigo-300">Cegah refluks / gumoh (Sendawa)</p>
+                <h4 className="text-xs font-bold text-white">Posisi Tegak (20 Menit)</h4>
+                <p className="text-[10px] text-indigo-300">Cegah gumoh / sendawa</p>
               </div>
             </div>
 
@@ -507,11 +534,11 @@ export function ActiveBottleTimers({
 
           {isUprightActive ? (
             <p className="text-[11px] text-slate-300 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 leading-relaxed">
-              💡 Gendong bayi dalam posisi tegak/dada menempel di bahu selama 20 menit agar udara dalam lambung keluar.
+              💡 Gendong bayi tegak agar udara dalam lambung keluar.
             </p>
           ) : (
             <p className="text-[11px] text-emerald-300 bg-emerald-950/30 p-2.5 rounded-xl border border-emerald-800/40">
-              🎉 20 menit posisi tegak telah selesai! Bayi aman direbahkan atau dilanjutkan tidur.
+              🎉 20 menit selesai! Bayi aman direbahkan.
             </p>
           )}
         </section>

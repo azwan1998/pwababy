@@ -52,7 +52,7 @@ export function DailySummaryShareWidget() {
           <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             <Share2 className="w-4 h-4" />
           </div>
-          <h3 className="text-xs font-bold text-white">Bagikan Rekap Harian Ke WhatsApp</h3>
+          <h3 className="text-xs font-bold text-white">Rekap Harian</h3>
         </div>
 
         <button
@@ -60,7 +60,7 @@ export function DailySummaryShareWidget() {
           className="flex items-center gap-1 px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold rounded-lg transition"
         >
           {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-          {copied ? 'Tersalin' : 'Salin Rekap'}
+          {copied ? 'Tersalin' : 'Salin'}
         </button>
       </div>
 
@@ -68,7 +68,7 @@ export function DailySummaryShareWidget() {
         onClick={handleWhatsAppShare}
         className="w-full flex items-center justify-center gap-2 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-lg transition active:scale-95"
       >
-        <MessageSquare className="w-4 h-4" /> Kirim Ringkasan ke WhatsApp Ayah / Bunda
+        <MessageSquare className="w-4 h-4" /> Bagikan ke WhatsApp
       </button>
 
     </div>

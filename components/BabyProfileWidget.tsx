@@ -116,7 +116,7 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
           onClick={() => setIsEditing(!isEditing)}
           className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
         >
-          <Edit2 className="w-3.5 h-3.5" /> Edit Profil
+          <Edit2 className="w-3.5 h-3.5" /> Edit
         </button>
       </div>
 
@@ -145,7 +145,7 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
               />
             </div>
             <div className="col-span-2">
-              <label className="text-[11px] text-slate-400 block mb-1">Berat Badan Saat Ini (kg)</label>
+              <label className="text-[11px] text-slate-400 block mb-1">Berat Badan (kg)</label>
               <input
                 type="number"
                 step="0.1"
@@ -168,7 +168,7 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
               type="submit"
               className="flex items-center gap-1 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-lg transition"
             >
-              <Check className="w-3.5 h-3.5" /> Simpan & Sync
+              <Check className="w-3.5 h-3.5" /> Simpan
             </button>
           </div>
         </form>
@@ -178,25 +178,23 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
           <div className="flex items-center justify-between text-xs font-bold text-indigo-300">
             <span className="flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-amber-400" />
-              Panduan Medis ({matchedGuide?.label || '1 - 3 Bulan'})
+              Panduan Umur ({matchedGuide?.label || '1 - 3 Bulan'})
             </span>
-            <span className="text-[10px] text-slate-400">Realtime Supabase Sync</span>
           </div>
 
           <div className="grid grid-cols-2 gap-2.5 text-xs">
             <div className="bg-slate-950/50 p-2.5 rounded-lg border border-slate-800">
               <span className="text-[10px] text-slate-400 flex items-center gap-1">
-                <Droplet className="w-3 h-3 text-emerald-400" /> Kebutuhan Susu Harian:
+                <Droplet className="w-3 h-3 text-emerald-400" /> Susu Harian:
               </span>
               <span className="font-extrabold text-emerald-400 mt-0.5 block">
                 ~{calcDailyFluidMl} ml / hari
               </span>
-              <span className="text-[9px] text-slate-500 block">Rumus Medis: 150ml x {currentWeight}kg</span>
             </div>
 
             <div className="bg-slate-950/50 p-2.5 rounded-lg border border-slate-800">
               <span className="text-[10px] text-slate-400 flex items-center gap-1">
-                <Scale className="w-3 h-3 text-cyan-400" /> Ideal Botol / Minum:
+                <Scale className="w-3 h-3 text-cyan-400" /> Porsi Botol:
               </span>
               <span className="font-extrabold text-cyan-400 mt-0.5 block">
                 {matchedGuide?.milk?.portionPerFeedingMl || '100 - 135 ml'}
@@ -212,14 +210,10 @@ export function BabyProfileWidget({ onAgeChange }: BabyProfileWidgetProps) {
             </div>
 
             <div className="bg-slate-950/50 p-2 rounded-lg border border-slate-800">
-              <span className="text-[10px] text-slate-400 block">😴 Total Tidur Harian:</span>
+              <span className="text-[10px] text-slate-400 block">😴 Total Tidur:</span>
               <span className="font-bold text-indigo-300 text-[11px]">{matchedGuide?.sleep?.totalSleepHours || '14 - 16 Jam'}</span>
             </div>
           </div>
-
-          <p className="text-[11px] text-slate-300 italic bg-indigo-950/30 p-2 rounded-lg border border-indigo-900/40">
-            💡 {matchedGuide?.milk?.note || 'Takaran susu disesuaikan dengan berat badan dan respons bayi.'}
-          </p>
         </div>
       )}
     </div>

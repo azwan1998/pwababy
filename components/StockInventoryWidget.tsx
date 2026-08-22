@@ -95,8 +95,8 @@ export function StockInventoryWidget({ stockData, onUpdateInventory }: StockInve
             <PackageCheck className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white">Stok Kaleng & Prediksi Beli</h3>
-            <p className="text-xs font-semibold text-amber-400">{stockData.brand_name || 'Bebelac 1'}</p>
+            <h3 className="text-sm font-bold text-white">Stok Susu</h3>
+            <p className="text-xs font-semibold text-amber-400">{stockData.brand_name || 'Susu Formula'}</p>
           </div>
         </div>
 
@@ -112,11 +112,11 @@ export function StockInventoryWidget({ stockData, onUpdateInventory }: StockInve
       {/* MODAL / FORM EDIT STOK */}
       {isEditing ? (
         <form onSubmit={handleSave} className="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-3">
-          <h4 className="text-xs font-bold text-indigo-400">Pengaturan Takaran & Stok Kaleng</h4>
+          <h4 className="text-xs font-bold text-indigo-400">Pengaturan Stok Kaleng</h4>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2">
-              <label className="text-[11px] text-slate-400 block mb-1">Merk Susu Formula</label>
+              <label className="text-[11px] text-slate-400 block mb-1">Merk Susu</label>
               <input
                 type="text"
                 value={brandName}
@@ -126,7 +126,7 @@ export function StockInventoryWidget({ stockData, onUpdateInventory }: StockInve
             </div>
 
             <div className="col-span-2">
-              <label className="text-[11px] text-slate-400 block mb-1">Preset Buka Kotak/Kaleng Baru:</label>
+              <label className="text-[11px] text-slate-400 block mb-1">Buka Kaleng Baru:</label>
               <div className="grid grid-cols-3 gap-2">
                 {weightPresets.map((g) => (
                   <button
@@ -142,14 +142,14 @@ export function StockInventoryWidget({ stockData, onUpdateInventory }: StockInve
                         : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'
                     }`}
                   >
-                    {g} Gram
+                    {g}g
                   </button>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="text-[11px] text-slate-400 block mb-1">Berat Kaleng Utuh (g)</label>
+              <label className="text-[11px] text-slate-400 block mb-1">Berat Utuh (g)</label>
               <input
                 type="number"
                 value={canWeight}
@@ -159,7 +159,7 @@ export function StockInventoryWidget({ stockData, onUpdateInventory }: StockInve
             </div>
 
             <div>
-              <label className="text-[11px] text-slate-400 block mb-1">Sisa Stok Saat Ini (g)</label>
+              <label className="text-[11px] text-slate-400 block mb-1">Sisa Saat Ini (g)</label>
               <input
                 type="number"
                 value={currentWeight}
@@ -191,7 +191,7 @@ export function StockInventoryWidget({ stockData, onUpdateInventory }: StockInve
           {/* QUICK BUTTON RESET BUKA KOTAK BARU */}
           <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-800 space-y-2">
             <span className="text-[11px] text-slate-300 font-semibold flex items-center gap-1">
-              <RefreshCw className="w-3.5 h-3.5 text-amber-400" /> Buka Kotak/Kaleng Baru:
+              <RefreshCw className="w-3.5 h-3.5 text-amber-400" /> Buka Kaleng Baru:
             </span>
             <div className="grid grid-cols-3 gap-2">
               {weightPresets.map((g) => (
@@ -200,7 +200,7 @@ export function StockInventoryWidget({ stockData, onUpdateInventory }: StockInve
                   onClick={() => handleQuickResetCan(g)}
                   className="py-1.5 px-2 bg-slate-800 hover:bg-indigo-900/80 active:bg-indigo-800 border border-slate-700 hover:border-indigo-500 rounded-lg text-xs font-bold text-slate-200 transition active:scale-95"
                 >
-                  +{g}g Baru
+                  +{g}g
                 </button>
               ))}
             </div>
@@ -209,7 +209,7 @@ export function StockInventoryWidget({ stockData, onUpdateInventory }: StockInve
           {/* BAR KEMAJUAN STOK */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs font-semibold">
-              <span className="text-slate-300">Sisa Stok Gram:</span>
+              <span className="text-slate-300">Sisa Stok:</span>
               <span className="text-amber-400 font-bold">
                 {stockData.current_weight_grams}g / {stockData.can_weight_grams}g ({stockPercent}%)
               </span>
@@ -232,12 +232,12 @@ export function StockInventoryWidget({ stockData, onUpdateInventory }: StockInve
           {/* KARTU RINGKASAN ESTIMASI PREDIKSI */}
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-slate-900/60 p-3 rounded-xl border border-slate-800">
-              <p className="text-[11px] text-slate-400">Rata2 Harian (7 Hari)</p>
+              <p className="text-[11px] text-slate-400">Rata2 Minum</p>
               <p className="text-base font-extrabold text-white mt-1">
                 {stockData.avg_daily_grams || 77.4} <span className="text-xs text-slate-400">g/hari</span>
               </p>
               <p className="text-[10px] text-slate-500 mt-0.5">
-                ~{stockData.avg_daily_ml || 540} ml / hari
+                ~{stockData.avg_daily_ml || 540} ml/hari
               </p>
             </div>
 
@@ -246,7 +246,7 @@ export function StockInventoryWidget({ stockData, onUpdateInventory }: StockInve
                 <ShoppingCart className="w-3.5 h-3.5 text-amber-400" /> Estimasi Habis
               </p>
               <p className="text-base font-extrabold text-amber-400 mt-1">
-                {stockData.estimated_days_left < 99 ? `${stockData.estimated_days_left} Hari` : 'Tidak terbatas'}
+                {stockData.estimated_days_left < 99 ? `${stockData.estimated_days_left} Hari` : 'Aman'}
               </p>
               <p className="text-[10px] text-slate-500 mt-0.5">
                 Target Beli: <span className="text-white font-medium">{formattedBuyDate}</span>
@@ -256,14 +256,9 @@ export function StockInventoryWidget({ stockData, onUpdateInventory }: StockInve
 
           {/* ALERT REKOMENDASI PEMBELIAN */}
           {stockData.estimated_days_left <= 2 && (
-            <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/30 p-3 rounded-xl text-rose-300 text-xs">
-              <AlertCircle className="w-5 h-5 flex-shrink-0 text-rose-400" />
-              <div>
-                <p className="font-bold">⚠️ Perhatian: Stok Susu Hampir Habis!</p>
-                <p className="text-[11px] text-rose-200/80">
-                  Disarankan membeli kaleng/kotak susu baru sebelum {formattedBuyDate}.
-                </p>
-              </div>
+            <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/30 p-2.5 rounded-xl text-rose-300 text-xs">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-400" />
+              <p className="font-bold">⚠️ Stok susu hampir habis! Beli sebelum {formattedBuyDate}.</p>
             </div>
           )}
         </div>

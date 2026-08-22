@@ -32,8 +32,7 @@ export function TummyTimeWidget() {
             <Baby className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white">Tummy Time Tracker</h3>
-            <p className="text-xs text-slate-400">Target Harian: 3–5 Sesi</p>
+            <h3 className="text-sm font-bold text-white">Tummy Time</h3>
           </div>
         </div>
 
@@ -51,7 +50,7 @@ export function TummyTimeWidget() {
       {/* DYNAMIC TIMER STOPWATCH SECTION */}
       <div className="bg-slate-900/80 p-4 rounded-xl border border-slate-800 flex items-center justify-between">
         <div>
-          <p className="text-[11px] text-slate-400">Durasi Sesi Berjalan</p>
+          <p className="text-[11px] text-slate-400">Durasi Sesi</p>
           <p className="text-3xl font-black font-mono text-cyan-400 tracking-tight mt-0.5">
             {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
           </p>
@@ -62,14 +61,14 @@ export function TummyTimeWidget() {
             onClick={stopAndSaveSession}
             className="flex items-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-rose-900/30 active:scale-95 transition-all"
           >
-            <Square className="w-4 h-4 fill-current" /> Selesai & Simpan
+            <Square className="w-4 h-4 fill-current" /> Selesai
           </button>
         ) : (
           <button
             onClick={startLiveSession}
             className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-cyan-900/30 active:scale-95 transition-all"
           >
-            <Play className="w-4 h-4 fill-current" /> Mulai Sesi
+            <Play className="w-4 h-4 fill-current" /> Mulai
           </button>
         )}
       </div>
@@ -79,7 +78,7 @@ export function TummyTimeWidget() {
         <div className="flex items-center justify-between text-xs text-slate-300 bg-slate-950/40 p-3 rounded-xl border border-slate-800">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span>Total Durasi Hari Ini:</span>
+            <span>Total Hari Ini:</span>
           </div>
           <div className="flex items-center gap-3">
             <span className="font-extrabold text-white">{totalMinutesToday} Menit</span>
@@ -97,7 +96,7 @@ export function TummyTimeWidget() {
         {/* DAFTAR RIWAYAT SESI TUMMY TIME HARI INI */}
         {showHistory && activities.length > 0 && (
           <div className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-2 max-h-48 overflow-y-auto">
-            <p className="text-[11px] font-bold text-cyan-400 mb-2">Riwayat Sesi Tummy Time Hari Ini:</p>
+            <p className="text-[11px] font-bold text-cyan-400 mb-2">Riwayat Hari Ini:</p>
             {activities.map((act, index) => {
               const timeStr = new Date(act.started_at).toLocaleTimeString('id-ID', {
                 hour: '2-digit',

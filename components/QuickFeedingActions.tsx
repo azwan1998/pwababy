@@ -63,7 +63,6 @@ export function QuickFeedingActions({
           </div>
           <div>
             <h2 className="text-base font-extrabold text-white tracking-tight">Pemberian Susu</h2>
-            <p className="text-xs text-slate-400">Takaran Standar Bebelac</p>
           </div>
         </div>
 
@@ -92,7 +91,7 @@ export function QuickFeedingActions({
                 className="col-span-2 flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-black rounded-xl shadow-lg shadow-emerald-950/40 active:scale-95 transition-all text-sm min-h-[50px]"
               >
                 <Play className="w-4 h-4 fill-current" />
-                Mulai Minum (Sentuh Bibir)
+                Mulai Minum
               </button>
             )}
 
@@ -102,7 +101,7 @@ export function QuickFeedingActions({
                 className="col-span-2 flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-500 hover:from-indigo-500 hover:to-violet-400 text-white font-black rounded-xl shadow-lg shadow-indigo-950/40 active:scale-95 transition-all text-sm min-h-[50px]"
               >
                 <CheckCircle2 className="w-4 h-4" />
-                Selesai / Habis (Mulai Posisi Tegak)
+                Selesai Minum
               </button>
             )}
 
@@ -111,7 +110,7 @@ export function QuickFeedingActions({
               className="col-span-2 flex items-center justify-center gap-1.5 py-2.5 px-3 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 text-xs font-semibold rounded-xl transition"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              Buang Susu Basi / Tidak Dihabiskan
+              Buang Susu Basi
             </button>
           </div>
         </div>
@@ -120,7 +119,7 @@ export function QuickFeedingActions({
         <div>
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-slate-300 font-bold flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Pilih Takaran Botol:
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Pilih Takaran:
             </p>
           </div>
 
@@ -156,7 +155,7 @@ export function QuickFeedingActions({
             <form onSubmit={handleCustomSubmit} className="flex gap-2 mt-2">
               <input
                 type="number"
-                placeholder="Jumlah ml (misal: 150)"
+                placeholder="Jumlah ml"
                 value={customMl}
                 onChange={(e) => setCustomMl(e.target.value)}
                 className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500"
@@ -181,7 +180,7 @@ export function QuickFeedingActions({
               onClick={() => setShowCustom(true)}
               className="w-full flex items-center justify-center gap-1.5 py-2.5 border border-dashed border-slate-700 hover:border-indigo-500/50 text-slate-400 hover:text-indigo-300 text-xs font-semibold rounded-2xl transition active:scale-98"
             >
-              <Plus className="w-3.5 h-3.5" /> Takaran Kustom Lainnya
+              <Plus className="w-3.5 h-3.5" /> Takaran Lainnya
             </button>
           )}
         </div>

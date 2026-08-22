@@ -71,13 +71,12 @@ export function SleepWakeWindowWidget({ babyAgeMonths = 2 }: SleepWakeWindowWidg
             {isSleeping ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white">Durasi Tidur & Wake Window</h3>
-            <p className="text-xs text-slate-400">Pola Tidur Siang & Malam</p>
+            <h3 className="text-sm font-bold text-white">Tidur & Wake Window</h3>
           </div>
         </div>
 
         <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${isSleeping ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 animate-pulse' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'}`}>
-          {isSleeping ? '🌙 Sedang Tidur' : '☀️ Sedang Bangun'}
+          {isSleeping ? '🌙 Tidur' : '☀️ Bangun'}
         </span>
       </div>
 
@@ -86,7 +85,7 @@ export function SleepWakeWindowWidget({ babyAgeMonths = 2 }: SleepWakeWindowWidg
         {isSleeping ? (
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] text-slate-400">Durasi Tidur Saat Ini:</p>
+              <p className="text-[11px] text-slate-400">Durasi Tidur:</p>
               <p className="text-2xl font-black font-mono text-indigo-400 mt-0.5">
                 {Math.floor(currentSleepMins / 60)}j {currentSleepMins % 60}m
               </p>
@@ -96,14 +95,14 @@ export function SleepWakeWindowWidget({ babyAgeMonths = 2 }: SleepWakeWindowWidg
               onClick={wakeUp}
               className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg active:scale-95 transition"
             >
-              <Sun className="w-4 h-4 fill-current" /> Bangun Tidur
+              <Sun className="w-4 h-4 fill-current" /> Bangun
             </button>
           </div>
         ) : (
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[11px] text-slate-400 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-cyan-400" /> Sudah Bangun (Wake Window):
+                <Clock className="w-3.5 h-3.5 text-cyan-400" /> Sudah Bangun:
               </p>
               <p className={`text-2xl font-black font-mono mt-0.5 ${isOvertired ? 'text-rose-500 animate-pulse' : isNearNapTime ? 'text-amber-400' : 'text-cyan-400'}`}>
                 {wakeHours > 0 ? `${wakeHours}j ` : ''}{wakeMinsRem}m
@@ -114,14 +113,14 @@ export function SleepWakeWindowWidget({ babyAgeMonths = 2 }: SleepWakeWindowWidg
               onClick={startSleep}
               className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs rounded-xl shadow-lg active:scale-95 transition"
             >
-              <Moon className="w-4 h-4 fill-current" /> Mulai Tidur
+              <Moon className="w-4 h-4 fill-current" /> Tidur
             </button>
           </div>
         )}
 
         {/* GUIDELINE INFO WAKE WINDOW */}
         <div className="pt-2 border-t border-slate-800 flex justify-between items-center text-xs">
-          <span className="text-slate-400">Batas Wake Window Ideal:</span>
+          <span className="text-slate-400">Batas Ideal:</span>
           <span className="font-extrabold text-amber-400">{wakeWindowConfig.label}</span>
         </div>
       </div>
@@ -129,19 +128,14 @@ export function SleepWakeWindowWidget({ babyAgeMonths = 2 }: SleepWakeWindowWidg
       {/* ALERT WAKE WINDOW & OVERTIRED */}
       {!isSleeping && (
         isOvertired ? (
-          <div className="flex items-start gap-2 bg-rose-500/10 border border-rose-500/30 p-3 rounded-xl text-rose-300 text-xs">
-            <AlertCircle className="w-5 h-5 flex-shrink-0 text-rose-400 mt-0.5" />
-            <div>
-              <p className="font-bold">⚠️ Perhatian: Waktunya Tidur Siang (Overtired)!</p>
-              <p className="text-[11px] text-rose-200/80 mt-0.5">
-                Si kecil sudah bangun selama {currentWakeMins} menit (melewati batas {maxWakeMinutes} m). Segera tidurkan agar tidak rewel.
-              </p>
-            </div>
+          <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/30 p-2.5 rounded-xl text-rose-300 text-xs">
+            <AlertCircle className="w-4 h-4 flex-shrink-0 text-rose-400" />
+            <p className="font-bold">⚠️ Waktunya Tidur (Sudah bangun {currentWakeMins}m / batas {maxWakeMinutes}m)</p>
           </div>
         ) : isNearNapTime ? (
-          <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-amber-300 text-xs">
+          <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl text-amber-300 text-xs">
             <Sparkles className="w-4 h-4 flex-shrink-0 text-amber-400" />
-            <span>Persiapkan suasana tidur, wake window akan habis 15 menit lagi.</span>
+            <span>Siapkan tidur, wake window sisa 15 menit lagi.</span>
           </div>
         ) : null
       )}
@@ -152,7 +146,7 @@ export function SleepWakeWindowWidget({ babyAgeMonths = 2 }: SleepWakeWindowWidg
           <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Total Tidur Hari Ini:
         </span>
         <span className="font-bold text-white">
-          {Math.floor((totalSleepMinutesToday || 0) / 60)} Jam {(totalSleepMinutesToday || 0) % 60} Menit / target {matchedGuide?.sleep?.totalSleepHours || '14 - 16 jam/hari'}
+          {Math.floor((totalSleepMinutesToday || 0) / 60)}j {(totalSleepMinutesToday || 0) % 60}m <span className="text-slate-500 text-[11px]">/ {matchedGuide?.sleep?.totalSleepHours || '14-16j'}</span>
         </span>
       </div>
     </div>
